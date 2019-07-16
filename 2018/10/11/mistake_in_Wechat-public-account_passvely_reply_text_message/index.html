@@ -482,19 +482,17 @@
         <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>按照惯例先说上下文环境，，<br>是这样，，公司需要做个功能:</p>
 <blockquote>
 <p>对ERP用户和公司公众号用户做映射，然后向该用户推送相应角色的经营日报模板消息。</p>
-<p>实现流程:<br>1.<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1443433542" target="_blank" rel="noopener">通过微信接口生成带参二维码</a>;<br>2.用户用微信扫一扫功能扫描生成的带参二维码;<br>3.获取二维码中的客户识别码和用户的openid;<br>4.被动<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140543" target="_blank" rel="noopener">回复用户文本消息</a>(附超链接),引导用户完成绑定过程。</p>
+<p>实现流程:<br>1.<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1443433542" target="_blank" rel="noopener">通过微信接口生成带参二维码</a>;<br>2.用户用微信扫一扫功能扫描生成的带参二维码;<br>3.获取二维码中的客户识别码和用户的openid;<br>4.被动<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140543" target="_blank" rel="noopener">回复用户文本消息</a>(附超链接),引导用户完成绑定过程。</p>
 </blockquote>
 <h4 id="Tips"><a href="#Tips" class="headerlink" title="Tips"></a>Tips</h4><p>总的来说是没啥难度的，，过程还算顺利。有两点值得一提，，</p>
-<h5 id="关于授权流程"><a href="#关于授权流程" class="headerlink" title="关于授权流程"></a>关于授权流程</h5><p>最开始的时候，是想让用户扫码之后直接跳转到绑定页面，完美~<br>然鹅，事实并非这样，，正常我们用浏览器、相机等APP扫描二维码的时候，如果二维码内容是链接的话，有的会直接访问，有的会提示是否访问这个链接。然而，<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421141013" target="_blank" rel="noopener">在微信中扫描二维码分为两种情况</a>，，</p>
+<h5 id="关于授权流程"><a href="#关于授权流程" class="headerlink" title="关于授权流程"></a>关于授权流程</h5><p>最开始的时候，是想让用户扫码之后直接跳转到绑定页面，完美~<br>然鹅，事实并非这样，，正常我们用浏览器、相机等APP扫描二维码的时候，如果二维码内容是链接的话，有的会直接访问，有的会提示是否访问这个链接。然而，<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421141013" target="_blank" rel="noopener">在微信中扫描二维码分为两种情况</a>，，</p>
 <blockquote>
 <ol>
 <li><strong>scancode_push</strong>：扫码推事件用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后显示扫描结果（如果是URL，将进入URL），且会将扫码的结果传给开发者，开发者可以下发消息。</li>
 <li><strong>scancode_waitmsg</strong>：扫码推事件且弹出“消息接收中”提示框用户点击按钮后，微信客户端将调起扫一扫工具，完成扫码操作后，将扫码的结果传给开发者，同时收起扫一扫工具，然后弹出“消息接收中”提示框，随后可能会收到开发者下发的消息。</li>
 </ol>
 </blockquote>
-<h6 id="scancode-push"><a href="#scancode-push" class="headerlink" title="scancode_push"></a>scancode_push</h6><p>倘若我们使用 scancode_push 的方式，，OK，如果二维码内容是URL的话，可以直接访问。但如此，，我们就不能使用微信生成带参二维码的接口生成二维码了，，因为，这种方式生成的二维码内容本质上是微信的链接:</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"ticket"</span>:<span class="string">"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm</span></span><br><span class="line"><span class="string">3sUw=="</span>,</span><br><span class="line">	<span class="attr">"expire_seconds"</span>:<span class="number">60</span>,</span><br><span class="line">	<span class="attr">"url"</span>:<span class="string">"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h6 id="scancode-push"><a href="#scancode-push" class="headerlink" title="scancode_push"></a>scancode_push</h6><p>倘若我们使用 scancode_push 的方式，，OK，如果二维码内容是URL的话，可以直接访问。但如此，，我们就不能使用微信生成带参二维码的接口生成二维码了，，因为，这种方式生成的二维码内容本质上是微信的链接:<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">	<span class="attr">"ticket"</span>:<span class="string">"gQH47joAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2taZ2Z3TVRtNzJXV1Brb3ZhYmJJAAIEZ23sUwMEmm</span></span><br><span class="line"><span class="string">3sUw=="</span>,</span><br><span class="line">	<span class="attr">"expire_seconds"</span>:<span class="number">60</span>,</span><br><span class="line">	<span class="attr">"url"</span>:<span class="string">"http://weixin.qq.com/q/kZgfwMTm72WWPkovabbI"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <blockquote>
 <p>ticket: 获取的二维码ticket，凭借此ticket可以在有效时间内换取二维码。<br>expire_seconds: 该二维码有效时间，以秒为单位。 最大不超过2592000（即30天）。<br><strong>url: 二维码图片解析后的地址，开发者可根据该地址自行生成需要的二维码图片</strong></p>
 </blockquote>
@@ -673,7 +671,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -684,7 +682,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -695,7 +693,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -975,7 +973,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

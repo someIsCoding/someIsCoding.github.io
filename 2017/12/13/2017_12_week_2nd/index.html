@@ -95,19 +95,19 @@
 
 
 
-<meta name="description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125;  👆等价于👇 1234var a;function(a)&amp;#123;    if(a === 0 || a === &amp;quot;&amp;quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125;  在之前固有的印象中，逻辑与&amp;am">
+<meta name="description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125; 👆等价于👇1234var a;function(a)&amp;#123;    if(a === 0 || a === &quot;&quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125; 在之前固有的印象中，逻辑与&amp;amp;&amp;amp;和逻辑或||">
 <meta name="keywords" content="逻辑或,TTFB">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2017_12-第二周">
 <meta property="og:url" content="http://www.someoneiscoding.com/2017/12/13/2017_12_week_2nd/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
-<meta property="og:description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125;  👆等价于👇 1234var a;function(a)&amp;#123;    if(a === 0 || a === &amp;quot;&amp;quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125;  在之前固有的印象中，逻辑与&amp;am">
+<meta property="og:description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125; 👆等价于👇1234var a;function(a)&amp;#123;    if(a === 0 || a === &quot;&quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125; 在之前固有的印象中，逻辑与&amp;amp;&amp;amp;和逻辑或||">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fmm409desjj22800hyn4y.jpg">
 <meta property="og:updated_time" content="2017-12-23T06:01:32.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017_12-第二周">
-<meta name="twitter:description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125;  👆等价于👇 1234var a;function(a)&amp;#123;    if(a === 0 || a === &amp;quot;&amp;quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125;  在之前固有的印象中，逻辑与&amp;am">
+<meta name="twitter:description" content="2017_12-第二周1var a = a || &amp;#123;&amp;#125; 👆等价于👇1234var a;function(a)&amp;#123;    if(a === 0 || a === &quot;&quot; || a === false || a === null || a === undefined) a = &amp;#123;&amp;#125;&amp;#125; 在之前固有的印象中，逻辑与&amp;amp;&amp;amp;和逻辑或||">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fmm409desjj22800hyn4y.jpg">
 
 
@@ -479,14 +479,9 @@
       
 
       
-        <h4 id="2017-12-第二周"><a href="#2017-12-第二周" class="headerlink" title="2017_12-第二周"></a>2017_12-第二周</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var a = a || &#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>👆等价于👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var a;</span><br><span class="line">function(a)&#123;</span><br><span class="line">    if(a === 0 || a === &quot;&quot; || a === false || a === null || a === undefined) a = &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>在之前固有的印象中，逻辑与<code>&amp;&amp;</code>和逻辑或<code>||</code>都是出现在<code>if</code>条件语句中，一般用来做判断条件使用，<code>if()</code>括号中会依据<code>a==1 || b!=1</code>表达式的返回值<code>true</code>or<code>false</code>来做判断。👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if(a==1 || b!=1)&#123;</span><br><span class="line">    //do something;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+        <h4 id="2017-12-第二周"><a href="#2017-12-第二周" class="headerlink" title="2017_12-第二周"></a>2017_12-第二周</h4><figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">var a = a <span class="string">|| &#123;&#125;</span></span><br></pre></td></tr></table></figure>
+<p>👆等价于👇<br><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">var a;</span><br><span class="line">function(a)&#123;</span><br><span class="line">    <span class="keyword">if</span>(<span class="attr">a</span> === <span class="number">0</span> || <span class="attr">a</span> === <span class="string">""</span> || <span class="attr">a</span> === <span class="literal">false</span> || <span class="attr">a</span> === <span class="literal">null</span> || <span class="attr">a</span> === undefined) <span class="attr">a</span> = &#123;&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在之前固有的印象中，逻辑与<code>&amp;&amp;</code>和逻辑或<code>||</code>都是出现在<code>if</code>条件语句中，一般用来做判断条件使用，<code>if()</code>括号中会依据<code>a==1 || b!=1</code>表达式的返回值<code>true</code>or<code>false</code>来做判断。👇<br><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span><span class="comment">(a==1 || b!=1)</span>&#123;</span><br><span class="line">    <span class="comment">//do something;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>猛然间看到<code>var a = a || {}</code>有些无措，，后来得知，<strong><code>||</code>返回的不是<code>boolean</code>值<code>true</code>or<code>false</code>，而是两边的表达式</strong>！比如<code>a==1</code>和<code>b!=1</code>,因为双目运算符的运算优先级高于逻辑或，所以最终返回的是表达的值。</p>
 <hr>
 <p>　<br>TTFB:Time To First Byte<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fmm409desjj22800hyn4y.jpg" alt="TTFB"></p>
@@ -657,7 +652,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -668,7 +663,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -679,7 +674,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -959,7 +954,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

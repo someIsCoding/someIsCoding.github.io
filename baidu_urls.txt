@@ -1,3 +1,4 @@
+http://www.someoneiscoding.com/2019/07/16/What_kind_of_intelligent_system_does_the_world_need/
 http://www.someoneiscoding.com/2019/06/09/existential_psychodynamics/
 http://www.someoneiscoding.com/2019/04/09/about_HashSet/
 http://www.someoneiscoding.com/2019/04/03/about_ArrayList/
@@ -47,4 +48,3 @@ http://www.someoneiscoding.com/2017/11/14/tcp_retransmission_mechanism/
 http://www.someoneiscoding.com/2017/10/19/establishment_release_of_tcp-connections/
 http://www.someoneiscoding.com/2017/10/18/about_tcp/
 http://www.someoneiscoding.com/2017/10/03/there_is_no_title_in_diary/
-http://www.someoneiscoding.com/2017/10/02/my_first_shot/

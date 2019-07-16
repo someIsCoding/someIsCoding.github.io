@@ -480,55 +480,55 @@
       
 
       
-        <p>紧接上篇文章-<a href="http://someoneiscoding.com/2018/05/31/about-wechat-authorize3rd-component_verify_ticket&component_access_token/" target="_blank" rel="noopener">关于获取微信第三方平台的 component_verify_ticket 和 component_access_token</a>-之后，，</p>
-<h4 id="我以为…"><a href="#我以为…" class="headerlink" title="我以为…"></a>我以为…</h4><p>在上篇中，获取 component_access_token 之后，看看下边的步骤好像跟自己没什么太大关系了，直接跳过『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1453779503&token=&lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>』之后的步骤，，开始准备『代小程序实现业务』中的<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1492585163_FtTNA&token=&lang=zh_CN" target="_blank" rel="noopener">微信登陆</a>，，没想到步子迈的有点大，终究还是扯着 * 了。。</p>
+        <p>紧接上篇文章-<a href="http://someoneiscoding.com/2018/05/31/about-wechat-authorize3rd-component_verify_ticket&amp;component_access_token/" target="_blank" rel="noopener">关于获取微信第三方平台的 component_verify_ticket 和 component_access_token</a>-之后，，</p>
+<h4 id="我以为…"><a href="#我以为…" class="headerlink" title="我以为…"></a>我以为…</h4><p>在上篇中，获取 component_access_token 之后，看看下边的步骤好像跟自己没什么太大关系了，直接跳过『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1453779503&amp;token=&amp;lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>』之后的步骤，，开始准备『代小程序实现业务』中的<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1492585163_FtTNA&amp;token=&amp;lang=zh_CN" target="_blank" rel="noopener">微信登陆</a>，，没想到步子迈的有点大，终究还是扯着 * 了。。</p>
 <p>顺着这个思路走，，在做 微信登陆 <span id="wxminalogin"></span>时，对于开发者来讲，也没有什么太大违和感呀，，👇 下边的参数也都有了呀，，</p>
 <blockquote>
 <table>
 <thead>
 <tr>
-<th align="left">参数</th>
-<th align="center">是否必须</th>
-<th align="left">说明</th>
+<th style="text-align:left">参数</th>
+<th style="text-align:center">是否必须</th>
+<th style="text-align:left">说明</th>
 </tr>
 </thead>
-<tbody><tr>
-<td align="left">appid</td>
-<td align="center">是</td>
-<td align="left">小程序的AppID</td>
+<tbody>
+<tr>
+<td style="text-align:left">appid</td>
+<td style="text-align:center">是</td>
+<td style="text-align:left">小程序的AppID</td>
 </tr>
 <tr>
-<td align="left">js_code</td>
-<td align="center">是</td>
-<td align="left">登录时获取的 code</td>
+<td style="text-align:left">js_code</td>
+<td style="text-align:center">是</td>
+<td style="text-align:left">登录时获取的 code</td>
 </tr>
 <tr>
-<td align="left">grant_type</td>
-<td align="center">是</td>
-<td align="left">填authorization_code</td>
+<td style="text-align:left">grant_type</td>
+<td style="text-align:center">是</td>
+<td style="text-align:left">填authorization_code</td>
 </tr>
 <tr>
-<td align="left">component_appid</td>
-<td align="center">是</td>
-<td align="left">第三方平台appid</td>
+<td style="text-align:left">component_appid</td>
+<td style="text-align:center">是</td>
+<td style="text-align:left">第三方平台appid</td>
 </tr>
 <tr>
-<td align="left">component_access_token</td>
-<td align="center">是</td>
-<td align="left">第三方平台的 component_access_token</td>
+<td style="text-align:left">component_access_token</td>
+<td style="text-align:center">是</td>
+<td style="text-align:left">第三方平台的 component_access_token</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
 </blockquote>
-<p>然而，在请求接口的时候，报如下错误👇</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"errcode"</span>:<span class="number">40001</span>,<span class="attr">"errmsg"</span>:<span class="string">"invalid credential, access_token is invalid or not latest, hints: [ req_id: MNHl9a0063th42 ]"</span>&#125;</span><br></pre></td></tr></table></figure>
-
+<p>然而，在请求接口的时候，报如下错误👇<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"errcode"</span>:<span class="number">40001</span>,<span class="attr">"errmsg"</span>:<span class="string">"invalid credential, access_token is invalid or not latest, hints: [ req_id: MNHl9a0063th42 ]"</span>&#125;</span><br></pre></td></tr></table></figure></p>
 <p>这时候首先是很费解，，为什么会报<em>不合法的调用凭证</em>错误？access_token 有问题，，</p>
 <ul>
 <li>component_access_token 有问题？不能啊，刚刚获取的，还热乎呢。。</li>
 <li>但是参数中只传了这一个包含 access_token 的参数呀。。</li>
 </ul>
 <p>为了验证 component_access_token 是否有效，紧接着去以步骤 3 的方法获取预授权码 pre_auth_code了，，事实证明，完全没问题。这就有点蹊跷了，，</p>
-<p>去小程序官方社区找相关帖子，比如<a href="https://developers.weixin.qq.com/blogdetail?action=get_post_info&docid=0008c6c53280d00c0546c0ef352000&highline=40001%20" target="_blank" rel="noopener">微信开放平台 用户微信登录失败 invalid credential</a>，，下边有官方回复是 👇</p>
+<p>去小程序官方社区找相关帖子，比如<a href="https://developers.weixin.qq.com/blogdetail?action=get_post_info&amp;docid=0008c6c53280d00c0546c0ef352000&amp;highline=40001%20" target="_blank" rel="noopener">微信开放平台 用户微信登录失败 invalid credential</a>，，下边有官方回复是 👇</p>
 <blockquote>
 <p>应该是login换取的code失效或者已经被消费了，导致获取到了错误的access_token，请检查后端login的逻辑<br>的确有可能，，因为 <a href="https://developers.weixin.qq.com/miniprogram/dev/api/api-login.html#wxloginobject" target="_blank" rel="noopener">调用接口wx.login() 获取临时登录凭证（code）</a>是有时效限制的，目前有效期为5分钟，，而且测试之后发现，<strong>Code 是一次性的！！！</strong>就像发帖的哥们儿回复的那样，，<strong>Code 复用之后，的确会报 41063 的错误</strong>。</p>
 </blockquote>
@@ -544,14 +544,12 @@
 <h5 id="第二步：小程序模版的开发和上传"><a href="#第二步：小程序模版的开发和上传" class="headerlink" title="第二步：小程序模版的开发和上传"></a>第二步：小程序模版的开发和上传</h5><p>Done！</p>
 <h5 id="第三步：添加到小程序模版库，获得模版ID"><a href="#第三步：添加到小程序模版库，获得模版ID" class="headerlink" title="第三步：添加到小程序模版库，获得模版ID"></a>第三步：添加到小程序模版库，获得模版ID</h5><p>Done！</p>
 <h5 id="第四步：调用接口，为旗下授权的小程序部署代码"><a href="#第四步：调用接口，为旗下授权的小程序部署代码" class="headerlink" title="第四步：调用接口，为旗下授权的小程序部署代码"></a>第四步：调用接口，为旗下授权的小程序部署代码</h5><p><strong>？？？</strong></p>
-<p>可能我错过了些什么。。。赶紧去看『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1489140610_Uavc4&token=&lang=zh_CN" target="_blank" rel="noopener">代码管理</a>』</p>
-<h5 id="1、为授权的小程序帐号上传小程序代码"><a href="#1、为授权的小程序帐号上传小程序代码" class="headerlink" title="1、为授权的小程序帐号上传小程序代码"></a>1、为授权的小程序帐号上传小程序代码<span id="commitcode"></span></h5><p>调用接口所需参数中的 access_token，需要使用第三方平台获取到的该小程序授权的authorizer_access_token，，到这儿，明了了。还是需要按『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1453779503&token=&lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>』的流程来。。</p>
+<p>可能我错过了些什么。。。赶紧去看『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1489140610_Uavc4&amp;token=&amp;lang=zh_CN" target="_blank" rel="noopener">代码管理</a>』</p>
+<h5 id="1、为授权的小程序帐号上传小程序代码"><a href="#1、为授权的小程序帐号上传小程序代码" class="headerlink" title="1、为授权的小程序帐号上传小程序代码"></a>1、为授权的小程序帐号上传小程序代码<span id="commitcode"></span></h5><p>调用接口所需参数中的 access_token，需要使用第三方平台获取到的该小程序授权的authorizer_access_token，，到这儿，明了了。还是需要按『<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1453779503&amp;token=&amp;lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>』的流程来。。</p>
 <h4 id="还得按流程来"><a href="#还得按流程来" class="headerlink" title="还得按流程来"></a>还得按流程来</h4><h5 id="步骤1：第三方平台方获取预授权码（pre-auth-code）"><a href="#步骤1：第三方平台方获取预授权码（pre-auth-code）" class="headerlink" title="步骤1：第三方平台方获取预授权码（pre_auth_code）"></a>步骤1：第三方平台方获取预授权码（pre_auth_code）</h5><p>这个真没啥说的，测试一遍过，，这儿要出啥问题，极有可能是 component_access_token 的问题。</p>
 <h5 id="步骤2：引入用户进入授权页"><a href="#步骤2：引入用户进入授权页" class="headerlink" title="步骤2：引入用户进入授权页"></a>步骤2：引入用户进入授权页<span id="componentloginpage"></span></h5><p>这一步之前也看过，，当时想到的场景只有公众号的，觉得这个跟小程序没啥关系呀。总不能让用户在小程序中以这种方式进行所谓的授权的？！</p>
 <p>(PS:事实证明，的确不会让用户在小程序中以这种方式授权，<strong>naive</strong>!!在这儿，我对整个第三方平台的作用，以及授权流程还不清晰，，以为像 oauth 2.0 一样，<strong>naive</strong>!!! <strong>这里的授权其实是公众号或者小程序授权给第三方平台，就像第三方平台文档中菜单说的那样『代公众号实现业务』、『代小程序实现业务』</strong>。在这里，还没有面向终端用户，面向的是使用第三方平台的客户，客户的公众号或者小程序面向终端用户。)</p>
-<p>看这个接口的时候有一丢丢费解，，梳理之后大概是这样 👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">获取预授权码（pre_auth_code）</span><br><span class="line">=&gt; 引导用户进入一静态页面，页面中有一链接或一按钮，用户点击</span><br><span class="line">=&gt; 进入微信授权页</span><br><span class="line">=&gt; 用户确认要授予第三方平台的权限，决定是否授权</span><br><span class="line">=&gt; End</span><br></pre></td></tr></table></figure>
-
+<p>看这个接口的时候有一丢丢费解，，梳理之后大概是这样 👇<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">获取预授权码（pre_auth_code）</span><br><span class="line">=&gt; 引导用户进入一静态页面，页面中有一链接或一按钮，用户点击</span><br><span class="line">=&gt; 进入微信授权页</span><br><span class="line">=&gt; 用户确认要授予第三方平台的权限，决定是否授权</span><br><span class="line">=&gt; End</span><br></pre></td></tr></table></figure></p>
 <p>大概解释下，，我觉得，<em>获取预授权码（pre_auth_code）</em>和<em>引导用户进入授权页</em>这两个关系很紧密，某种程度上是一个步骤，，因为预授权码只能用在引导用户跳转向授权页面的链接中。所以，，我直接把这两步合并了：获取预授权码（pre_auth_code），返回引导授权页面。</p>
 <ol>
 <li><p><img src="http://ww1.sinaimg.cn/large/71fd377dly1fs1fx4wwcbj20v408yabc.jpg" alt="@引导页"></p>
@@ -576,10 +574,10 @@
 <p>接口调用凭据刷新令牌（在授权的公众号具备API权限时，才有此返回值），刷新令牌主要<strong>用于第三方平台获取和刷新已授权用户的 access_token，只会在授权时刻提供</strong>，请妥善保存。 一旦丢失，只能让用户重新授权，才能再次拿到新的刷新令牌。</p>
 </blockquote>
 <p>我觉得应该是不一样的。总不能有新用户授权给第三方之后，之前已经授权的用户的刷新令牌就失效了吧。。后期可以分析下日志确定下这个问题。</p>
-<p>到这儿，，我们就可以回到最初<a href="#commitcode">为授权的小程序帐号上传小程序代码</a>的步骤了，现在上传应该就不会有问题了<del>上传成功后，<a href="#wxminalogin">『微信登陆』</a>也是一遍过</del></p>
+<p>到这儿，，我们就可以回到最初<a href="#commitcode">为授权的小程序帐号上传小程序代码</a>的步骤了，现在上传应该就不会有问题了~上传成功后，<a href="#wxminalogin">『微信登陆』</a>也是一遍过~</p>
 <p><strong>完美！！！</strong></p>
 <hr>
-<p><strong>公众号授权，只需要运营者权限即可；但小程序授权，必须得是管理员！！！</strong><br>另外，，如果在没有授权的情况下，去调用相应公众号或小程序的接口时会得到<code>{&quot;errcode&quot;:48001,&quot;errmsg&quot;:&quot;api unauthorized}</code>,或<code>{&quot;errcode&quot;:61003,&quot;errmsg&quot;:&quot;component is not authorized by this account}</code>。此时应该先检查是否授权，可以利用<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318459&token=&lang=zh_CN" target="_blank" rel="noopener">公众号第三方平台的权限说明</a>接口。如果，已经公众号或者小程序授权给第三方，，此时应该检查授权时的权限；可以重新走一遍授权流程，在授权页检查权限集；如果是小程序的话，可以去小程序后台 =&gt; 设置 =&gt; 第三方服务查看。</p>
+<p><strong>公众号授权，只需要运营者权限即可；但小程序授权，必须得是管理员！！！</strong><br>另外，，如果在没有授权的情况下，去调用相应公众号或小程序的接口时会得到<code>{&quot;errcode&quot;:48001,&quot;errmsg&quot;:&quot;api unauthorized}</code>,或<code>{&quot;errcode&quot;:61003,&quot;errmsg&quot;:&quot;component is not authorized by this account}</code>。此时应该先检查是否授权，可以利用<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318459&amp;token=&amp;lang=zh_CN" target="_blank" rel="noopener">公众号第三方平台的权限说明</a>接口。如果，已经公众号或者小程序授权给第三方，，此时应该检查授权时的权限；可以重新走一遍授权流程，在授权页检查权限集；如果是小程序的话，可以去小程序后台 =&gt; 设置 =&gt; 第三方服务查看。</p>
 
       
     </div>
@@ -746,7 +744,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -757,7 +755,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -768,7 +766,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -1048,7 +1046,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

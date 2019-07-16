@@ -477,11 +477,9 @@
       
 
       
-        <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1498704199_1bcax&token=6616e998e48175a3d6490042d013a5bc53b4acef&lang=zh_CN" target="_blank" rel="noopener">微信提供的接口</a>创建微信开放平台，然后绑定另一个appid即可。</p>
+        <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1498704199_1bcax&amp;token=6616e998e48175a3d6490042d013a5bc53b4acef&amp;lang=zh_CN" target="_blank" rel="noopener">微信提供的接口</a>创建微信开放平台，然后绑定另一个appid即可。</p>
 <p>想想也没啥，之前也为其他客户部署过，无非是调用两次接口：一次创建，一次绑定，，齐活~</p>
-<h4 id="BUT！！！"><a href="#BUT！！！" class="headerlink" title="BUT！！！"></a>BUT！！！</h4><p>但！！！这次搞的格外艰辛，微信服务器一直返回</p>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"errcode"</span>:<span class="number">40013</span>,</span><br><span class="line">   <span class="attr">"errmsg"</span>:<span class="string">"invalid appid hint: [iAEcfA03241959]"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<h4 id="BUT！！！"><a href="#BUT！！！" class="headerlink" title="BUT！！！"></a>BUT！！！</h4><p>但！！！这次搞的格外艰辛，微信服务器一直返回<br><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"errcode"</span>:<span class="number">40013</span>,</span><br><span class="line">   <span class="attr">"errmsg"</span>:<span class="string">"invalid appid hint: [iAEcfA03241959]"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>日狗，真心日狗！确定一定以及肯定，两个appid都没问题，，因为通过<strong><a href="https://api.weixin.qq.com/cgi-bin/open/create?access_token=xxxx" target="_blank" rel="noopener">创建 开放平台帐号并绑定公众号/小程序</a></strong>接口，两个appid都可以创建开放平台。<br>搞到这儿也<span id="ques">想到一个问题</span>，，</p>
 <blockquote>
 <p>我想通过接口，把客户的小程序和公众号绑在同一个开放平台，，无疑，小程序肯定是授权给第三方平台的。倘若，我用小程序的<code>appid</code>，创建开放平台，然后将公众号的<code>appid</code>绑到小程序创建的开放平台上。<br>那么问题来了，，公众号需要将<code>开放平台账号管理权限</code>授权给第三方平台么？？？</p>
@@ -496,9 +494,7 @@
 </ol>
 <p>前两步都没啥，但是第三步！我在调用接口的地址上发现点端倪，跟我之前调用时写的不一样，然后就提醒他这儿应该写公众号的<code>appid</code>，而不是小程序的。他突然也想到了些什么，很肯定的说，上次绑定成功的时候就是这样写的！</p>
 <p>终于找到问题所在，，验证，成功！！！<br>在这儿详细复盘下，给大家伙儿做个参考，，</p>
-<p>我将文档中<code>将 公众号/小程序绑定到开放平台帐号下</code>的接口封装成我们自己的接口，，伪代码如下👇</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将 公众号/小程序绑定到开放平台帐号下</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Attention</span> 该API用于将一个尚未绑定开放平台帐号的公众号或小程序绑定至指定开放平台帐号上。二者须主体相同。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindOpen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String appid = getPara(<span class="string">"appId"</span>);</span><br><span class="line">    String open_appid = getPara(<span class="string">"open_appid"</span>);</span><br><span class="line">    String target_appid = getPara(<span class="string">"target_appid"</span>);</span><br><span class="line">    <span class="keyword">final</span> String BIND_OPEN = <span class="string">"https://api.weixin.qq.com/cgi-bin/open/bind?access_token="</span> + getAuthorizerAccessToken(appid);</span><br><span class="line">	String result = HttpUtils.post(BIND_OPEN, Kv.set(<span class="string">"appid"</span>, target_appid).set(<span class="string">"open_appid"</span>, open_appid).toJson());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>我将文档中<code>将 公众号/小程序绑定到开放平台帐号下</code>的接口封装成我们自己的接口，，伪代码如下👇<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将 公众号/小程序绑定到开放平台帐号下</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Attention</span> 该API用于将一个尚未绑定开放平台帐号的公众号或小程序绑定至指定开放平台帐号上。二者须主体相同。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindOpen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String appid = getPara(<span class="string">"appId"</span>);</span><br><span class="line">    String open_appid = getPara(<span class="string">"open_appid"</span>);</span><br><span class="line">    String target_appid = getPara(<span class="string">"target_appid"</span>);</span><br><span class="line">    <span class="keyword">final</span> String BIND_OPEN = <span class="string">"https://api.weixin.qq.com/cgi-bin/open/bind?access_token="</span> + getAuthorizerAccessToken(appid);</span><br><span class="line">	String result = HttpUtils.post(BIND_OPEN, Kv.set(<span class="string">"appid"</span>, target_appid).set(<span class="string">"open_appid"</span>, open_appid).toJson());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p><code>失败</code>：我之前的绑定方式，，</p>
 <ol>
 <li>通过小程序<code>appid</code>创建开放平台；</li>
@@ -514,7 +510,7 @@
 <p>👆In a word，，<strong>使用 A 创建开放平台，然后使用 B 的access_token绑定 B。</strong></p>
 <p>至此，，问题解决！另外，<a href="#ques">之前的问题</a>也迎刃而解：<strong>公众号和小程序都需要将开放平台账号管理权限授权给第三方平台</strong>。</p>
 <p>想想也是，当初将小程序和公众号的权限授权给第三方平台时也是这样，，<strong>标的主动绑定平台，而不是平台主动绑定标的</strong>。</p>
-<h4 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h4><p>嗯，希望<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1498704199_1bcax&token=6616e998e48175a3d6490042d013a5bc53b4acef&lang=zh_CN" target="_blank" rel="noopener">微信开放平台帐号管理</a>完档越来月完善，，意味深长的微笑 🙂。</p>
+<h4 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h4><p>嗯，希望<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1498704199_1bcax&amp;token=6616e998e48175a3d6490042d013a5bc53b4acef&amp;lang=zh_CN" target="_blank" rel="noopener">微信开放平台帐号管理</a>完档越来月完善，，意味深长的微笑 🙂。</p>
 
       
     </div>
@@ -679,7 +675,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -690,7 +686,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -701,7 +697,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -981,7 +977,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

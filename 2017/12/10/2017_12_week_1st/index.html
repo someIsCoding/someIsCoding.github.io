@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。  在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行">
+<meta name="description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行，其">
 <meta name="keywords" content="幂等,单词">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2017_12—第一周">
 <meta property="og:url" content="http://www.someoneiscoding.com/2017/12/10/2017_12_week_1st/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
-<meta property="og:description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。  在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行">
+<meta property="og:description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行，其">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2017-12-10T14:58:23.277Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2017_12—第一周">
-<meta name="twitter:description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。  在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行">
+<meta name="twitter:description" content="2017-12-04 幂等：idempotent idempotence 是一个数学与计算机学概念，常见于抽象代数中。在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行，其">
 
 
 
@@ -478,16 +478,15 @@
 
       
         <h4 id="2017-12-04"><a href="#2017-12-04" class="headerlink" title="2017-12-04"></a>2017-12-04</h4><ul>
-<li><strong>幂等</strong>：<em>idempotent idempotence</em> 是一个数学与计算机学概念，常见于抽象代数中。</li>
-</ul>
-<p><strong>在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同</strong>。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行，其结果都是一样的.更复杂的操作幂等保证是利用唯一交易号(流水号)实现.</p>
-<ul>
-<li><strong>scaffold</strong> 英[ˈskæfəʊld]   美[ˈskæfoʊld]<br>n.  脚手架; &lt;史&gt;断头台;<br>[例句]Moore ascended the scaffold and addressed the executioner.<br>穆尔走上断头台，和刽子手说话。</li>
+<li><p><strong>幂等</strong>：<em>idempotent idempotence</em> 是一个数学与计算机学概念，常见于抽象代数中。<br><strong>在编程中一个幂等操作的特点是其任意多次执行所产生的影响均与一次执行的影响相同</strong>。幂等函数，或幂等方法，是指可以使用相同参数重复执行，并能获得相同结果的函数。这些函数不会影响系统状态，也不用担心重复执行会对系统造成改变。例如，“setTrue()”函数就是一个幂等函数,无论多次执行，其结果都是一样的.更复杂的操作幂等保证是利用唯一交易号(流水号)实现.</p>
+</li>
+<li><p><strong>scaffold</strong> 英[ˈskæfəʊld]   美[ˈskæfoʊld]<br>n.  脚手架; &lt;史&gt;断头台;<br>[例句]Moore ascended the scaffold and addressed the executioner.<br>穆尔走上断头台，和刽子手说话。</p>
+</li>
 </ul>
 <h4 id="2017-12-05"><a href="#2017-12-05" class="headerlink" title="2017-12-05"></a>2017-12-05</h4><ul>
 <li><p><strong>stumbled</strong>    英 [ˈstʌmbl]   美 [ˈstʌmbəl]<br>v.    （不顺畅地） 说( stumble的过去式和过去分词 ); 跌跌撞撞地走; 绊脚; （说话、演奏等） 出错;<br>[例句]She stumbled and fell, scraping her palms and knees.<br>她绊了一下摔倒了，手掌和膝盖都蹭破了。</p>
 </li>
-<li><p><em>*reserved</em>  英[rɪˈzɜ:vd]   美[rɪˈzɜ:rvd]<br>adj.    预订的; 矜持的; 储藏着的;<br>v.  保留[储备]某物( reserve的过去式);<br>[例句]He was unemotional, quite quiet, and reserved<br>他感情淡漠，沉默寡言，性格内敛。</p>
+<li><p>*<em>reserved</em>  英[rɪˈzɜ:vd]   美[rɪˈzɜ:rvd]<br>adj.    预订的; 矜持的; 储藏着的;<br>v.  保留[储备]某物( reserve的过去式);<br>[例句]He was unemotional, quite quiet, and reserved<br>他感情淡漠，沉默寡言，性格内敛。</p>
 </li>
 <li><p>keyword 关键字<br>reserved word 保留字</p>
 </li>
@@ -674,7 +673,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -685,7 +684,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -696,7 +695,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -976,7 +975,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

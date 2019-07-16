@@ -487,7 +487,7 @@
 <h5 id="UnionID机制说明："><a href="#UnionID机制说明：" class="headerlink" title="UnionID机制说明："></a>UnionID机制说明：</h5><p>开发者可通过OpenID来获取用户基本信息。特别需要注意的是，如果开发者拥有多个移动应用、网站应用和公众帐号，可通过获取用户基本信息中的unionid来区分用户的唯一性，因为只要是同一个微信开放平台帐号下的移动应用、网站应用和公众帐号，用户的unionid是唯一的。换句话说，同一用户，<strong>对同一个微信开放平台下的不同应用，unionid是相同的</strong>。</p>
 </blockquote>
 <blockquote>
-<p>– 详见<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140839" target="_blank" rel="noopener">获取用户基本信息(UnionID机制)
+<p>– 详见<a href="https://mp.weixin.qq.com/wiki?t=resource/res_main&amp;id=mp1421140839" target="_blank" rel="noopener">获取用户基本信息(UnionID机制)
 </a></p>
 </blockquote>
 <p>我们现在代入场景想象下：</p>
@@ -502,15 +502,15 @@
 <li>第三方平台的小程序模板怎么上传？需要审核么？？</li>
 <li>这个全网发布什么鬼？也要审核？？？</li>
 </ul>
-<p>小程序审核发布什么的我基本想得通，像在应用分发平台(各应用市场)上传App一样的道理，，但这个『全网发布』有点太抽象了，，领导问起来，我也有点心虚，只能硬着头皮一点点试。好在领导给力，说 大不了微信不给审核通过，我们再按着未通过理由改呗。其实也看了<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318611&token=43d90291769311af7af9b34c6c7b93ef600525b7&lang=zh_CN" target="_blank" rel="noopener">全网发布接入检测说明</a>，要检查一些文档中的接口是否可用。但是总有一层很模糊的东西没想明白，，Why？后来全网发布检测，一遍过，，<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fvm8kqdnnaj227d18nqd7.jpg" alt="微信第三方平台全网发布检测">(因为最初是为了发布小程序，所以小程序的接口全部实现了，公众号的接口没怎么做，，因此有两项测试失败，但还是提示检测通过了。)</p>
+<p>小程序审核发布什么的我基本想得通，像在应用分发平台(各应用市场)上传App一样的道理，，但这个『全网发布』有点太抽象了，，领导问起来，我也有点心虚，只能硬着头皮一点点试。好在领导给力，说 大不了微信不给审核通过，我们再按着未通过理由改呗。其实也看了<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318611&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">全网发布接入检测说明</a>，要检查一些文档中的接口是否可用。但是总有一层很模糊的东西没想明白，，Why？后来全网发布检测，一遍过，，<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fvm8kqdnnaj227d18nqd7.jpg" alt="微信第三方平台全网发布检测">(因为最初是为了发布小程序，所以小程序的接口全部实现了，公众号的接口没怎么做，，因此有两项测试失败，但还是提示检测通过了。)</p>
 <p>然后检测通过后，就是等待微信审核(大概两个工作日)。这个时候还是不太确定全网发布是什么鬼，，直到审核通过。审核通过之后，，在上图中原『全网发布』按钮所在的那个 section(就是灰背景色那部分，，不知道怎么形容。。) 中灰字部分，会变成『全网发布的审核已通过，已允许公众号来进行授权托管。』。看到这行小字的时候好像突然明白了，，原来全网发布监测是为了保证基本服务可用(因为access_token获取方式变了，其他接口绝大部分需要通过传递access_token来实现业务)。检测通过之后，就可以面向所有客户(在测试阶段只测试白名单中应用可以使用第三方平台的接口实现业务)。</p>
-<p>其实，在<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1419318292&token=43d90291769311af7af9b34c6c7b93ef600525b7&lang=zh_CN" target="_blank" rel="noopener">第三方平台概述</a>中，已经提到了，，只不过最开始开发的时候，不明所以，就略过了，，</p>
+<p>其实，在<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318292&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">第三方平台概述</a>中，已经提到了，，只不过最开始开发的时候，不明所以，就略过了，，</p>
 <blockquote>
 <h5 id="四、第三方平台授权后如何帮助旗下公众平台帐号实现业务"><a href="#四、第三方平台授权后如何帮助旗下公众平台帐号实现业务" class="headerlink" title="四、第三方平台授权后如何帮助旗下公众平台帐号实现业务"></a>四、第三方平台授权后如何帮助旗下公众平台帐号实现业务</h5><p>请根据本文档目录中的“代公众号实现业务”文件夹中的相关文档，来了解如何帮助旗下公众号调用接口，实现业务。也可根据本文档目录中的“代小程序实现业务”文件夹中的相关文档，来了解如何帮助旗下小程序帐号调用接口，实现业务。</p>
 </blockquote>
 <p>关键字 -&gt; 『<strong>代公众号实现业务</strong>』。这几个字就是第三方平台的作用。当然，不光是公众号，还有小程序，，因为公众号业务比小程序实现的要早，文档维护不及时。。<br>以公众号为例，，公众号的开发首先是面向大众的，有微信公众号后台页面，图形化页面中也可以个性化定制一些功能，比如自定义消息回复什么的。但如果深度定制的话，就需要开发者通过调用微信接口实现了，接口的令牌就是access_token，既可以通过它识别公众号身份，又可以控制请求次数 频率什么的。那第三方平台呢，为了免去为多个客户重复开发相同业务麻烦，一套接口，一个项目实现所有用户的业务(当然，需要参数来区分每个请求属于哪个公众号)。<br>同理，小程序。</p>
-<p>这就是第三方平台存在的价值。客户具体怎么授权第三方平台实现业务，可以<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1453779503&token=43d90291769311af7af9b34c6c7b93ef600525b7&lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>，也可以参考我之前的博客<a href="http://someoneiscoding.com/2018/06/06/WeChat-third-party-platform-mina/" target="_blank" rel="noopener">微信第三方平台小程序爬坑</a>。</p>
-<p>另外，公众号或小程序授权给第三方平台时，可以自定义要授权的权限。潜台词就是，将相关权限授权给第三方平台后，那么相应的权限就由第三方平台实现，未授权的权限还是由自己开发开发实现。有些权限是互斥的，有些则是可以同时授权给多个平台的，，比如<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1498704199_1bcax&token=43d90291769311af7af9b34c6c7b93ef600525b7&lang=zh_CN" target="_blank" rel="noopener">微信开放平台账号管理权限</a>。其中就有提到，，</p>
+<p>这就是第三方平台存在的价值。客户具体怎么授权第三方平台实现业务，可以<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1453779503&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">授权流程技术说明</a>，也可以参考我之前的博客<a href="http://someoneiscoding.com/2018/06/06/WeChat-third-party-platform-mina/" target="_blank" rel="noopener">微信第三方平台小程序爬坑</a>。</p>
+<p>另外，公众号或小程序授权给第三方平台时，可以自定义要授权的权限。潜台词就是，将相关权限授权给第三方平台后，那么相应的权限就由第三方平台实现，未授权的权限还是由自己开发开发实现。有些权限是互斥的，有些则是可以同时授权给多个平台的，，比如<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1498704199_1bcax&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">微信开放平台账号管理权限</a>。其中就有提到，，</p>
 <blockquote>
 <p><strong>小程序只可将此权限集授权给一个第三方平台，即授权互斥</strong>。</p>
 </blockquote>
@@ -681,7 +681,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -692,7 +692,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -703,7 +703,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -983,7 +983,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

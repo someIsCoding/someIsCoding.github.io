@@ -95,18 +95,18 @@
 
 
 
-<meta name="description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇 123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppe">
+<meta name="description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppen">
 <meta name="keywords" content="邮件预警">
 <meta property="og:type" content="article">
 <meta property="og:title" content="邮件报警的简单实现">
 <meta property="og:url" content="http://www.someoneiscoding.com/2018/09/20/simple_implementation_of_email_early_warning/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
-<meta property="og:description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇 123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppe">
+<meta property="og:description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppen">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:updated_time" content="2019-01-22T09:43:41.410Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="邮件报警的简单实现">
-<meta name="twitter:description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇 123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppe">
+<meta name="twitter:description" content="其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇123456789101112131415# Error级别的日志发送邮件log4j.appender.MAIL=org.apache.log4j.net.SMTPAppen">
 
 
 
@@ -477,23 +477,17 @@
       
 
       
-        <p>其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"># Error级别的日志发送邮件</span><br><span class="line">log4j.appender.MAIL=org.apache.log4j.net.SMTPAppender</span><br><span class="line">log4j.appender.MAIL.Threshold=ERROR</span><br><span class="line">log4j.appender.MAIL.BufferSize=10</span><br><span class="line">log4j.appender.MAIL.From=189********@163.com</span><br><span class="line">log4j.appender.MAIL.SMTPHost=smtp.163.com</span><br><span class="line">log4j.appender.MAIL.Subject=Error Message from *** Project</span><br><span class="line"># 可以发送多个用户中间用,去分隔</span><br><span class="line">log4j.appender.MAIL.To=destination0@qq.com,destination1@qq.com</span><br><span class="line"># 邮箱帐号</span><br><span class="line">log4j.appender.MAIL.SMTPUsername=189********@163.com</span><br><span class="line"># 邮箱密码</span><br><span class="line">log4j.appender.MAIL.SMTPPassword=authcode</span><br><span class="line">log4j.appender.MAIL.layout=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.MAIL.layout.ConversionPattern=%-d&#123;yyyy-MM-dd HH\:mm\:ss&#125; [%c]-[%p] [%t] (%F\:%L) %X&#123;merchant_id&#125; -&gt;%m %n</span><br></pre></td></tr></table></figure>
-
+        <p>其实，log4j就可以实现邮件报警功能，只需要简单的配置即可。其实，不光可以发邮件，还可以通过sockets将日志文件发送到网络中的指定地址。具体查看log4j的各个appender就好啦。error级别的日志发送邮件配置👇<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Error级别的日志发送邮件</span></span><br><span class="line">log4j.appender.<span class="attribute">MAIL</span>=org.apache.log4j.net.SMTPAppender</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">Threshold</span>=ERROR</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">BufferSize</span>=10</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">From</span>=189********@163.com</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">SMTPHost</span>=smtp.163.com</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">Subject</span>=Error Message <span class="keyword">from</span> *** Project</span><br><span class="line"><span class="comment"># 可以发送多个用户中间用,去分隔</span></span><br><span class="line">log4j.appender.MAIL.<span class="attribute">To</span>=destination0@qq.com,destination1@qq.com</span><br><span class="line"><span class="comment"># 邮箱帐号</span></span><br><span class="line">log4j.appender.MAIL.<span class="attribute">SMTPUsername</span>=189********@163.com</span><br><span class="line"><span class="comment"># 邮箱密码</span></span><br><span class="line">log4j.appender.MAIL.<span class="attribute">SMTPPassword</span>=authcode</span><br><span class="line">log4j.appender.MAIL.<span class="attribute">layout</span>=org.apache.log4j.PatternLayout</span><br><span class="line">log4j.appender.MAIL.layout.<span class="attribute">ConversionPattern</span>=%-d&#123;yyyy-MM-dd HH\:mm\:ss&#125; [%c]-[%p] [%t] (%F\:%L) %X&#123;merchant_id&#125; -&gt;%m %n</span><br></pre></td></tr></table></figure></p>
 <p><strong>(PS：本篇内容无具体实现，只有实现思路)</strong></p>
 <p>(PPS: PS 是 postscript 的缩写，笑哭)</p>
 <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>我司主力项目托管在阿里云服务器，有些业务需要调用客户服务器的一些接口(以HTTP请求的方式，，理论上效率并不是非常好，传说使用netty会好一些，挖坑待实现)。主力项目主要做统筹工作，类似微信开放平台中的第三方平台，然后客户授权相关权限给我司，然后我司代实现其业务逻辑，，但商品数据存放在用户服务器的数据库中，倘若将所有用户的商品数据同步到阿里云线上，一则是没必要，二则所有客户的商品数据也是不小的体量，三则也可能会有客户不希望将自己的数据代托管，，种种。所以采用的这种方式。</p>
 <p>于是，需求出现了，，为了保证阿里云服务器中的项目与客户服务器通讯的可靠性，需保证调用出现异常时，开发人员及时知晓并fix bug。所以异常报警势在必行。</p>
 <p>有点意思，，让我来~</p>
-<h4 id="开头难"><a href="#开头难" class="headerlink" title="开头难"></a>开头难</h4><p>于是，开始网上了解相关解决方案，，得到的大部分都服务器状态监测相关，比如<em>zabbix<em>、</em>nagios</em>(虽然不知道这俩货具体是啥。。待我用自己的服务器练练手先)。看上去比较『重』，，因为我目前只需要邮件报警的功能，，主要是我司服务器是 Windows 的。。</p>
+<h4 id="开头难"><a href="#开头难" class="headerlink" title="开头难"></a>开头难</h4><p>于是，开始网上了解相关解决方案，，得到的大部分都服务器状态监测相关，比如<em>zabbix</em>、<em>nagios</em>(虽然不知道这俩货具体是啥。。待我用自己的服务器练练手先)。看上去比较『重』，，因为我目前只需要邮件报警的功能，，主要是我司服务器是 Windows 的。。</p>
 <p>好吧，这条路暂时走不通了。</p>
 <h4 id="想想其他办法"><a href="#想想其他办法" class="headerlink" title="想想其他办法"></a>想想其他办法</h4><p>异常报警，，那肯定是捕捉到异常之后的处理，所以应该在 catch 块儿中实现相关报警代码就行。按照<a href="https://blog.csdn.net/weixin_36751895/article/details/79411780" target="_blank" rel="noopener">java 使用JavaMail 做异常邮件报警 ，支持163邮箱、outlook邮箱</a>中代码实现即可。后来发现项目框架中有相关的 MailUtil 工具类，倒是省事儿。虽然上面博客中的代码并未复用，但至少让我看到了成功的希望。然而，，实现<em>RuntimeException</em>，然后捕捉到异常后抛出新实现的异常类，，真的有必要么??我在捕捉到异常之后，为什么不直接发送邮件，反而继续向上层抛异常？上层还有未捕获异常的处理？？至少我的项目中没有；另外，，如果在每个方法中去<code>try{}catch(e){}</code>，需要改动每个相关接口代码，太不优雅了。。</p>
-<p>有没有一种一劳永逸的方法，，一处设置，处处生效？？我首先想到的是过滤器，，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">   doFilter();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  e.printStackTrace();</span><br><span class="line">  <span class="comment">// 邮件报警</span></span><br><span class="line">  <span class="comment">// 短信报警</span></span><br><span class="line">  <span class="comment">// bulabula</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>但实现之后，发现异常并没有被抛出到过滤器中，，直接被其他逻辑catch捕捉处理了，，额。那就在 Route(或Controller) 级别的拦截器中处理，，</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  invocation.invoke();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="comment">// 报警bulabula</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>有没有一种一劳永逸的方法，，一处设置，处处生效？？我首先想到的是过滤器，，<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">   doFilter();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  e.printStackTrace();</span><br><span class="line">  <span class="comment">// 邮件报警</span></span><br><span class="line">  <span class="comment">// 短信报警</span></span><br><span class="line">  <span class="comment">// bulabula</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>但实现之后，发现异常并没有被抛出到过滤器中，，直接被其他逻辑catch捕捉处理了，，额。那就在 Route(或Controller) 级别的拦截器中处理，，<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>&#123;</span><br><span class="line">  invocation.invoke();</span><br><span class="line">&#125;<span class="keyword">catch</span>(Exception e)&#123;</span><br><span class="line">  <span class="comment">// 报警bulabula</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>完美！！然鹅，，业务中调用客户服务器中的接口需返回值，丫的！！<br>　<br>另外，所有与客户服务器交互的方法全被写在了 API.java 中，，其他业务中直接静态调用相应的方法即可。所以，用 Controller 级别的拦截器还不行。。</p>
 <p>权衡之下，最终以 action 为单位，自定义 catch 逻辑，返回相应的错误代码调用封装好的发送报警邮件的方法。同理，短信报警及其他报警形式。具体实现其实没什么难的，这里梳理下思路。</p>
 <hr>
@@ -662,7 +656,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -673,7 +667,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -684,7 +678,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -964,7 +958,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

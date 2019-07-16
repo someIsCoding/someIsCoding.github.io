@@ -103,7 +103,7 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="Context果然，『深入理解Java虚拟机』这本书读一遍是远远不够的，温故总能知新~今天要写的是先行发生原则，说来惭愧，，好像读第一遍的时候并没有太深刻的印象，昨晚再读的时候就拍大腿了：醍醐灌顶啊！！所以，今天还真得扮演搬运工的角色。 啥是先行发生原则说到先行发生原则，还得再往前倒倒，说下 Java 内存模型的特征。Java内存模型是围绕着在并发过程中如何处理原子性、可见性和有序性这个3个特征来">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-06-14T09:05:59.912Z">
+<meta property="og:updated_time" content="2019-07-16T13:38:38.573Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="先行发生原则">
 <meta name="twitter:description" content="Context果然，『深入理解Java虚拟机』这本书读一遍是远远不够的，温故总能知新~今天要写的是先行发生原则，说来惭愧，，好像读第一遍的时候并没有太深刻的印象，昨晚再读的时候就拍大腿了：醍醐灌顶啊！！所以，今天还真得扮演搬运工的角色。 啥是先行发生原则说到先行发生原则，还得再往前倒倒，说下 Java 内存模型的特征。Java内存模型是围绕着在并发过程中如何处理原子性、可见性和有序性这个3个特征来">
@@ -376,8 +376,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-06-14T17:05:59+08:00">
-                2019-06-14
+              <time title="更新于" itemprop="dateModified" datetime="2019-07-16T21:38:38+08:00">
+                2019-07-16
               </time>
             
           </span>
@@ -394,8 +394,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Java时代/" itemprop="url" rel="index">
-                    <span itemprop="name">Java时代</span>
+                  <a href="/categories/Java后时代/" itemprop="url" rel="index">
+                    <span itemprop="name">Java后时代</span>
                   </a>
                 </span>
 
@@ -486,7 +486,6 @@
 </ul>
 <p>好像 synchronized 关键字在需要这3种特性的时候都可以作为其中一种解决方案，于此同时其万能的属性导致了被我们程序员滥用。。<br>　<br>逼逼叨半天，还是没提到啥是先行发生原则。。别急，马上。。<br>如果 Java 内存模型中所有的有序性都靠 volatile 和 synchronized 来完成，那么有一些操作将变得非常繁琐，然鹅我们在写代码的过程中并没有感受到这一点，这就是因为『先行发生原则』。它是判断数据是否存在竞争、线程是否安全的主要依据。<br>先行发生是在 Java 内存模型中定义两项操作之间的偏序关系，如果说操作 A先行发生于操作 B，则说明发生操作B之前，操作 A 产生的影响能被操作 B 观察到，“影响”包括修改了内存中共享变量的值、发送了消息、调用了方法等。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 以下操作在线程 A 中执行</span></span><br><span class="line">i = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以下操作在线程 B 中执行</span></span><br><span class="line">j = i;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 以下操作在线程 C 中执行</span></span><br><span class="line">i = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
 <p>👆 假设线程 A 中的操作”i = 1”先行发生于线程 B 的操作”j = i”, 那么可以确定的是线程 B 的操作执行后，变量 j 一定等于 1，得出这个结论的依据有两个：</p>
 <ol>
 <li>根据先行发生原则，”i = 1”的结果可以被观察到；</li>
@@ -503,14 +502,10 @@
 <li><strong>对象终结原则</strong>(Finalizer Rule): 一个对象的初始化完成(构造函数执行结束)先行发生于它的 finalize()[^3]法的开始。</li>
 <li><strong>传递性</strong>(Transitivity): 如果操作 A 先行发生于操作 B，操作 B 先行发生于操作 C，则操作 A 先行发生于操作 C。</li>
 </ul>
-<p>举个栗子：👇</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> value = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(<span class="keyword">int</span> value)</span></span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.value = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<p>举个栗子：👇<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">int</span> value = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setValue</span><span class="params">(<span class="keyword">int</span> value)</span></span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.value = value;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getValue</span><span class="params">()</span></span>&#123;</span><br><span class="line">	<span class="keyword">return</span> value;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
 <p>上面👆的代码为最普通的 getter/setter 方法。假设存在线程 A 和 B，线程 A 先(时间上的先)调用了”setValue(1)”，然后线程 B 调用了同一个对象的”getValue()”，那么线程 B 收到的返回值为多少？</p>
 <p>由两个方法分别为线程 A 和线程 B 调用，不在同一个线程中，所以程序次序规则在这里不适用；由于没有同步块，自然不会发生 lock 和 unlock 操作，所以管程锁定规则也不适用；由于 value 变量没有被 volatile 修饰，所以 volatile 变量规则在这里也不适用；后面的线程启动、终止、中断规则和对象终结规则也和这里完全没有关系。因为没有一个适用的先行发生规则，所以最后一条传递性也无从谈起。因此，我们可以判定：尽管线程 A 在操作时间上先于线程 B，但是无法确定线程 B 中 getValue() 方法的返回值，即这里的操作不是线程安全的。</p>
-<p>解决方式也很简单，要么把 getter/setter 方法都定义为 synchronized 方法，这样就可以适用于管程锁定规则；要么把 value 定义为 volatile 变量，由于 setter 方法对 value 值的修改不依赖 value 的原值，满足 volatile 关键字使用场景，这样就可以套用 volatile 变量规则来满足先行发生原则。<br>通过上面的例子，，我们可以得出一个结论：<strong>一个操作”时间上的先发生”不代表这个操作会是”先行发生”，那如果一个操作”先行发生”是否就能对导出这个操作必定是”时间上的先发生”呢？很遗憾，同样也不能，一个典型的例子就是”指令重排序”</strong>。👇</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 下面操作在同一个线程中执行</span></span><br><span class="line"><span class="keyword">int</span> i = i;</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
+<p>解决方式也很简单，要么把 getter/setter 方法都定义为 synchronized 方法，这样就可以适用于管程锁定规则；要么把 value 定义为 volatile 变量，由于 setter 方法对 value 值的修改不依赖 value 的原值，满足 volatile 关键字使用场景，这样就可以套用 volatile 变量规则来满足先行发生原则。<br>通过上面的例子，，我们可以得出一个结论：<strong>一个操作”时间上的先发生”不代表这个操作会是”先行发生”，那如果一个操作”先行发生”是否就能对导出这个操作必定是”时间上的先发生”呢？很遗憾，同样也不能，一个典型的例子就是”指令重排序”</strong>。👇<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 下面操作在同一个线程中执行</span></span><br><span class="line"><span class="keyword">int</span> i = i;</span><br><span class="line"><span class="keyword">int</span> j = <span class="number">2</span>;</span><br></pre></td></tr></table></figure></p>
 <p>👆根据程序次序规则，<code>int i = 1;</code>先行发生于<code>int j = 2;</code>但是<code>int j = 2;</code>的代码完全可能先被处理器执行，这并不影响先行发生原则的正确性，因为我们在这条线程中是无法感知到这点的。</p>
 <p>[^2]: <a href="https://www.jianshu.com/p/cba722d994fa" target="_blank" rel="noopener">Java的Final 关键字的内存语义</a></p>
 <p>[^3]: <a href="https://www.jb51.net/article/125728.htm" target="_blank" rel="noopener">Java 禁止使用 finalizer 方法</a></p>
@@ -680,7 +675,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -691,7 +686,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -702,7 +697,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -982,7 +977,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

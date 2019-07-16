@@ -490,9 +490,7 @@
 <li>配置文件中关于 Mongodb 数据库连接的地方，同样，，网上的方法几乎都试了，还是不行。主要是配置文件中提示<code>cvc-complex-type.2.4.c: The matching wildcard is strict, but no declaration can be found for element &#39;mongo:mongo&#39;.</code>最后实在没辙，去 Mongodb 官网翻doc，，<strong>找到相应jar包的版本</strong>，发现人家用的<code>&lt;mongo:mongo-client&gt;</code>标签，不是<code>&lt;mongo:mongo&gt;</code>。。因为这段配置是在网上找的，而且都用的这个标签。。但我一般都会用最新版本的jar包，，好吧。</li>
 </ol>
 <p>别的还算顺利，，从搭环境到我把第一条位置信息持久化的Mongodb中已经两天了。。。但收获也是满满~</p>
-<p>关于微信小程序，，最近好像一直都在做关于前端的东西，博客中最近也分享的大多也是js的内容，但我明明是Java工程师。。。在上面的项目中遇到一个问题，，假如我想定时向数据库中插入位置信息，那常规实现起来可能是这样：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  wx.getLocation(&#123;</span><br><span class="line">    type: <span class="string">'wgs84'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        wx.getLocation(&#123;</span><br><span class="line">          url: <span class="string">''</span>,</span><br><span class="line">          data: &#123;</span><br><span class="line">            ...</span><br><span class="line">          &#125;,</span><br><span class="line">          type: <span class="string">'json'</span>,</span><br><span class="line">          method: <span class="string">'POST'</span>,</span><br><span class="line">          success: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res.data);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;,<span class="number">10000</span>);</span><br></pre></td></tr></table></figure>
-
+<p>关于微信小程序，，最近好像一直都在做关于前端的东西，博客中最近也分享的大多也是js的内容，但我明明是Java工程师。。。在上面的项目中遇到一个问题，，假如我想定时向数据库中插入位置信息，那常规实现起来可能是这样：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">setInterval(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  wx.getLocation(&#123;</span><br><span class="line">    type: <span class="string">'wgs84'</span>,</span><br><span class="line">      success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">        wx.getLocation(&#123;</span><br><span class="line">          url: <span class="string">''</span>,</span><br><span class="line">          data: &#123;</span><br><span class="line">            ...</span><br><span class="line">          &#125;,</span><br><span class="line">          type: <span class="string">'json'</span>,</span><br><span class="line">          method: <span class="string">'POST'</span>,</span><br><span class="line">          success: <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(res.data);</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;,<span class="number">10000</span>);</span><br></pre></td></tr></table></figure></p>
 <p>这样的代码还是很可怕的，很容易陷入回调深渊。。想用<code>Promise</code>或者<code>async</code>和<code>await</code>，又怕某些手机支持到了ES5，于是想着有没有什么很好的解决办法，最好微信小程序也有个框架什么的。在网上做了做功课，发现了腾讯官方在Github上开源的一个框架<code>wepy</code>(<a href="https://tencent.github.io/wepy/document.html#/" target="_blank" rel="noopener">微信小程序组件化开发框架WePY官方文档</a>)。然后又开始做功课，看到文档上说是基于<a href="https://cn.vuejs.org/" target="_blank" rel="noopener">Vue.js</a>框架，OK，，又去刷Vue的视频。在讲到Vue中的v-model的时候，好像明白一点什么是<a href="https://baike.baidu.com/item/MVVM/96310?fr=aladdin" target="_blank" rel="noopener">MVVM</a>框架了。回过头再学wepy，，它像一个框架，又像一个翻译器。说到这儿，感觉又有点像本站所用<a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="noopener">Hexo</a>，是一个博客框架。前者将.wyp文件翻译成<code>[.wxml,.wxss,.js,.json]</code>，后者将.md文件翻译成.html文件。这两者应该都是基于node.js。想想以前做前端项目时，完全不是一样的感觉。到目前为止，因为不了解node.js，，我只能说，嗯，有点意思~</p>
 <p>另外，，因为小程序代码包不能超过2M，所以今天尝试将目录中的静态资源文件放到服务器中，以节省空间。首先想到的是nginx，公司用的坑爹windows server 2008。事实证明的确坑爹，，已经可以在浏览器中访问本地图片列表了，但是点到某个具体的文件时就开始缓慢请求，最后报504错误。在自己Mac上的nginx模拟了下，虽然中间出了些问题，但最终还是解决了。只能将静态资源放到了tomcat中，不够优雅。。得改。<br>关于在mac中遇到问题，location中alias和root的区别，，</p>
 <blockquote>
@@ -680,7 +678,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -691,7 +689,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -702,7 +700,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -982,7 +980,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 

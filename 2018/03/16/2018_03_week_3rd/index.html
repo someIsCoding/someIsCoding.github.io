@@ -95,13 +95,13 @@
 
 
 
-<meta name="description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇 1&amp;lt;a href=">
+<meta name="description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇1&amp;lt;a href=&quot;">
 <meta name="keywords" content="Source Map,jqGrid,Chrome DevTools">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2018_03-第3周">
 <meta property="og:url" content="http://www.someoneiscoding.com/2018/03/16/2018_03_week_3rd/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
-<meta property="og:description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇 1&amp;lt;a href=">
+<meta property="og:description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇1&amp;lt;a href=&quot;">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fpepmhyez8j227y17ewlh.jpg">
 <meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fpeq29fng1j21mk0e4dk7.jpg">
@@ -112,7 +112,7 @@
 <meta property="og:updated_time" content="2018-03-16T09:13:57.039Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="2018_03-第3周">
-<meta name="twitter:description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇 1&amp;lt;a href=">
+<meta name="twitter:description" content="2018-03-第三周又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~ jQuery中$.load()动态加载页面脚本调试you know，我是一个写前端的Java程序员。。最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇1&amp;lt;a href=&quot;">
 <meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fpepmhyez8j227y17ewlh.jpg">
 
 
@@ -485,20 +485,15 @@
 
       
         <h3 id="2018-03-第三周"><a href="#2018-03-第三周" class="headerlink" title="2018-03-第三周"></a>2018-03-第三周</h3><p>又到周五了，，今天手头的工作差不多告一段落了，趁着热乎劲儿赶紧把这两天遇到的问题记录一下~</p>
-<h4 id="jQuery中-load-动态加载页面脚本调试"><a href="#jQuery中-load-动态加载页面脚本调试" class="headerlink" title="jQuery中$.load()动态加载页面脚本调试"></a>jQuery中$.load()动态加载页面脚本调试</h4><p><span id="dynamicDebug"></span><br>you know，我是一个写前端的Java程序员。。<br>最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fpepmhyez8j227y17ewlh.jpg" alt="后台页面"><br>点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:clickMenu('#(menu.url)')"</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
+<h4 id="jQuery中-load-动态加载页面脚本调试"><a href="#jQuery中-load-动态加载页面脚本调试" class="headerlink" title="jQuery中$.load()动态加载页面脚本调试"></a>jQuery中$.load()动态加载页面脚本调试</h4><p><span id="dynamicDebug"></span><br>you know，我是一个写前端的Java程序员。。<br>最近在做后台的数据表格页面时遇到一个问题，，大家应该都见过类似的后台<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fpepmhyez8j227y17ewlh.jpg" alt="后台页面"><br>点击白色框选地方的菜单项，右侧动态加载相应的内容，，每一个菜单项有一个点击事件，像这样👇<br><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"javascript:clickMenu('#(menu.url)')"</span>&gt;</span></span><br></pre></td></tr></table></figure></p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// url为相对路径地址，最终指向某个html页面</span></span><br><span class="line"><span class="comment">// #mainContent指向右侧主页面</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">clickMenu</span>(<span class="params">url</span>)</span>&#123;</span><br><span class="line">	$(<span class="string">'#mainContent'</span>).load(url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
 <p>正常来说，如果我们想要调试页面中的JavaScript代码，只需要 Cmd+Alt+I 调出Chrome DevTools，选择 source，找到相应的代码段，添加断点即可。但是，，以$.load()的方式动态加载的页面在Source中根本无法找到。。这 就尴尬了！！！难道只能在页面javaScript代码段中手码<code>debugger</code>？！惨无人道！一点也不优雅！！<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fpeq29fng1j21mk0e4dk7.jpg" alt="常规打断点"></p>
 <p>一番求索，终于看到了希望，，在<a href="https://stackoverflow.com/questions/9092125/how-to-debug-dynamically-loaded-javascript-with-jquery-in-the-browsers-debugg" target="_blank" rel="noopener">Stack Overflow</a>[^1]找到了类似的问题，，顺藤摸瓜，找到了一个唤作<a href="https://www.html5rocks.com/en/tutorials/developertools/sourcemaps/#toc-sourceurl" target="_blank" rel="noopener">sourceURL</a>的东东，,只需要在要载入的页面中javascript代码添加一句<code>//# sourceURL=jsName.js</code>即可，然后就可以在 source 中找到了，接下来就可以愉快的打断点啦~👇<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fpeqi29zjfj20gx08adfv.jpg" alt="sourceURL"></p>
 <p>另外，，我们可以再深入挖掘一下下，比如了解下阮一峰老师写的<a href="http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html" target="_blank" rel="noopener">JavaScript Source Map 详解</a>，看到日期着实尴尬了下，2013年就有了，而我2018年才第一次见到，，介，也许就是传说中的差距。。</p>
 <h4 id="jqGrid中将导航栏复制到表格上方"><a href="#jqGrid中将导航栏复制到表格上方" class="headerlink" title="jqGrid中将导航栏复制到表格上方"></a>jqGrid中将导航栏复制到表格上方</h4><p>在<a href="#dynamicDebug">jQuery中$.load()动态加载页面脚本调试</a>中的第一张偏中，主页面表格左下角的导航栏是一些常见的操作，比如添加、删除、编辑、搜索和刷新，，但是放在左下角的话，着实不太方便。控制好表格的高度还好一些，不用像下滑动直接就能在左下角找到这些操作入口。但是，如果控制不好高度的话，还要将页面滑到底部，，这体验，相当不好，，如果用户首次登陆后台的话，可能会懵『卧槽，怎么添加数据？！！咋操作？？？』。我一直觉得不需要产品使用说明的设计才是好设计，，这样，把常用操作放在表格左上角，效果马上不一样了~</p>
 <p>在导航栏的设置项中，找到了<code>cloneToTop</code>选项，但是设置为<code>true</code>后，导航栏并没有cloneToTop..<br>在初始化设置项中找到了<code>toppager</code>，将值改为<code>true</code>之后，呦，的确上去了，，像这样<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fpercj0rfzj21u20ns779.jpg" alt="jqgrid-toolbar-1"></p>
 <p>唯独导航栏没有上去！！！可恶，，于是又是一番求索，有成果~<br>原来，，设置<code>cloneToTop</code>的前提是<code>toppager</code>的值为<code>true</code>，，所以，接下来变成了这样👇<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fperkfqh0yj21u00nw77d.jpg" alt="jqgrid-toolbar-2"></p>
-<p>然后只需将分页和统计相关的div remove()就可以了</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#merchantTable_toppager_center"</span>).remove();</span><br><span class="line">$(<span class="string">"#merchantTable_toppager_right"</span>).remove();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我将这两行代码放在了 loadComplete 回调函数中。</span></span><br></pre></td></tr></table></figure>
-
+<p>然后只需将分页和统计相关的div remove()就可以了<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">"#merchantTable_toppager_center"</span>).remove();</span><br><span class="line">$(<span class="string">"#merchantTable_toppager_right"</span>).remove();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 我将这两行代码放在了 loadComplete 回调函数中。</span></span><br></pre></td></tr></table></figure></p>
 <p><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fperoqm8zuj21u20o2tbk.jpg" alt="jqgrid-toolbar-3"></p>
 <p>完美~</p>
 <hr>
@@ -681,7 +676,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -692,7 +687,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">5</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -703,7 +698,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -983,7 +978,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">95.2k</span>
+    <span title="Site words total count">100.6k</span>
   
 </div>
 
