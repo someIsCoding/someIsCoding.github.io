@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Keyboard-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Keyboard-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/Keyboard-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/Keyboard.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Java,线程安全,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Context最近一直没有更新文章是因为过得很充实，，一方面，现在在做小程序的线上商城，小程序这边倒没什么难的，难的是服务器端怎么设计架构，涉及到不同的客户,不同的客户门店组织架构又不一样，硬件条件也不一样，商品也不一样，还需要跟 ERP 的同事进行沟通。。另一方面，一直计划在房子合同到期(2019-04-04)之后换工作，所以积极准备面试，查漏补缺什么的。去年12月份时候，买了『深入理解Java">
+<meta name="keywords" content="Java,线程安全">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于微观下i++的并发执行">
+<meta property="og:url" content="http://www.someoneiscoding.com/2019/03/08/about_java_microcosmic_i++/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="Context最近一直没有更新文章是因为过得很充实，，一方面，现在在做小程序的线上商城，小程序这边倒没什么难的，难的是服务器端怎么设计架构，涉及到不同的客户,不同的客户门店组织架构又不一样，硬件条件也不一样，商品也不一样，还需要跟 ERP 的同事进行沟通。。另一方面，一直计划在房子合同到期(2019-04-04)之后换工作，所以积极准备面试，查漏补缺什么的。去年12月份时候，买了『深入理解Java">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1g0vu7oh5d9j21740kqtce.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dly1g0vukv4k3ej21900k8djn.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dly1g0vwgqxcr3j20se0rcdi6.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dly1g15x7ynu11j20bl08h0t8.jpg">
+<meta property="og:updated_time" content="2019-03-17T09:30:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于微观下i++的并发执行">
+<meta name="twitter:description" content="Context最近一直没有更新文章是因为过得很充实，，一方面，现在在做小程序的线上商城，小程序这边倒没什么难的，难的是服务器端怎么设计架构，涉及到不同的客户,不同的客户门店组织架构又不一样，硬件条件也不一样，商品也不一样，还需要跟 ERP 的同事进行沟通。。另一方面，一直计划在房子合同到期(2019-04-04)之后换工作，所以积极准备面试，查漏补缺什么的。去年12月份时候，买了『深入理解Java">
+<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dly1g0vu7oh5d9j21740kqtce.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.someoneiscoding.com/2019/03/08/about_java_microcosmic_i++/">
+
+
+
+
+
+  <title>关于微观下i++的并发执行 | 程序员的自我修养</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '[object Object]', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8cde3514bfbe2b3535033e604f0bb850";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员的自我修养</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.someoneiscoding.com/2019/03/08/about_java_microcosmic_i++/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小哪吒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">关于微观下i++的并发执行</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T22:22:22+08:00">
+                2019-03-08
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2019-03-17T17:30:56+08:00">
+                2019-03-17
+              </time>
+            
+          </span>
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java后时代/" itemprop="url" rel="index">
+                    <span itemprop="name">Java后时代</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/08/about_java_microcosmic_i++/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2019/03/08/about_java_microcosmic_i++/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  3,685
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  13
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>最近一直没有更新文章是因为过得很充实，，<br>一方面，现在在做小程序的线上商城，小程序这边倒没什么难的，难的是服务器端怎么设计架构，涉及到不同的客户,不同的客户门店组织架构又不一样，硬件条件也不一样，商品也不一样，还需要跟 ERP 的同事进行沟通。。<br>另一方面，一直计划在房子合同到期(2019-04-04)之后换工作，所以积极准备面试，查漏补缺什么的。去年12月份时候，买了『深入理解Java虚拟机』和『Java并发编程的艺术』。前者全是干货，干到没法儿写博客做笔记，否则就是在照搬书上的内容了。后者，，额，有点晦涩，没有读下去的欲望，然后就放在省图计算机科学分类下的书架上了，嗯，上周末去省图发现那本书已经不见了🤣。<br>对了，与此同时，，发现了 vue-element-admin 框架，一直想试试 webpack，然后就在不忙的时候慢慢重构现有的后台页面。用封装好的组件写页面真省心，爽的飞起~</p>
+<p>嗯，，今天的主要内容来自『深入理解Java虚拟机』的第五部分第一章–<strong>Java内存模型与线程</strong>。</p>
+<p>这是第二次读这一部分了，，第一次读的时候大水漫灌囫囵吞枣，全局把握(大误)。这次读的时候主要的是抠细节，温故知新，受益匪浅！下面进入正题儿~</p>
+<h4 id="Java内存模型与线程"><a href="#Java内存模型与线程" class="headerlink" title="Java内存模型与线程"></a>Java内存模型与线程</h4><h5 id="硬件的效率与一致性"><a href="#硬件的效率与一致性" class="headerlink" title="硬件的效率与一致性"></a>硬件的效率与一致性</h5><blockquote>
+<p>由于计算机的存储设备与处理器的运算速度有几个量级的差距，所以<strong>现代计算机系统都不得不加入一层读写速度尽可能接近处理器运算速度的高速缓存(Cache)来作为内存与处理器之间的缓冲</strong>：将运算需要使用的数据复制到缓存中，让运算能快速进行，当运算结束后再从缓存同步回内存之中，这样处理器就无须等待缓慢的内存读写了。</p>
+</blockquote>
+<blockquote>
+<p><strong>基于高速缓存的存储交互很好的解决了处理器与内存之间的速度矛盾，但是也为计算机系统带来更高的复杂度，因为它引入了一个新的问题：缓存一致性(Cache Coherence)。</strong>在多处理器系统中，每个处理器都有自己的高速缓存，而他们又共享同一主存。</p>
+</blockquote>
+<blockquote>
+<p>– Page 361</p>
+</blockquote>
+<p><img src="http://ww1.sinaimg.cn/large/71fd377dly1g0vu7oh5d9j21740kqtce.jpg" alt="处理器、高速缓存、主内存间的交互关系"></p>
+<h5 id="Java内存模型"><a href="#Java内存模型" class="headerlink" title="Java内存模型"></a>Java内存模型</h5><blockquote>
+<p><strong>Java 虚拟规范试图定义一种 Java 内存模型 (Java Memory Model, JMM) 来屏蔽掉各种硬件和操作系统的内存访问差异</strong>，以实现让 Java 程序在各种平台下都能达到一致的内存访问效果。</p>
+</blockquote>
+<blockquote>
+<p><strong>Java 内存模型的主要目标是定义程序中各个变量的访问规则，即在虚拟机中将变量存储到内存和从内存中取出变量这样的底层细节。</strong>　</p>
+</blockquote>
+<blockquote>
+<p><strong>Java 内存模型规定了所有的变量都存储在主内存(Main Memory)中，每条线程还有自己的工作内存(Working Memory)，线程中保存了被该线程使用到的变量的主内存的副本拷贝，线程对变量的所有操作(读取、赋值等)都必须在工作内存中进行，而不能直接读写主内存中的变量。</strong>不同线程之间也无法直接访问对方工作内存中的变量，线程间变量值的传递均需要通过主内存来完成。<br>– Page 362-363<br><img src="https://ws1.sinaimg.cn/large/71fd377dly1g0vukv4k3ej21900k8djn.jpg" alt="Java线程、工作内存、主内存间的交互关系"></p>
+</blockquote>
+<blockquote>
+<p>关于主内存和工作内存之间具体的交互协议，即一个变量如何从主内存拷贝到工作内存、如何从工作内存同步回主内存之类的实现细节，Java 内存模型中定义了一下 8 种操作来完成，虚拟机实现时必须保证下面提及的每一种操作都是原子的、不可再分的( double 和 long 例外)。</p>
+<ul>
+<li><span id="lock"><strong>lock</strong>(锁定)</span>：作用于主内存的变量，它把一个变量标识为一条线程独占的状态。</li>
+<li><span id="unlock"><strong>unlock</strong>(解锁)</span>：作用于主内存的变量，它把一个处于锁定状态的变量释放出来，释放后的变量才可以被其他线程锁定。</li>
+<li><strong>read</strong>(读取)：作用于主内存的变量，它把一个变量的值从主内存传输到线程的工作内存中，以便随后的 load 动作使用。</li>
+<li><strong>load</strong>(载入): 作用于工作内存的变量，它把read操作的从主内存中得到的变量值放入工作的变量副本中。</li>
+<li><strong>use</strong>(使用)：作用于工作内存的变量，它把工作内存中的一个变量的值传递给执行引擎，每当虚拟机遇到一个需要使用到变量的值的字节码指令时将会执行这个操作。</li>
+<li><strong>assign</strong>(赋值)：作用于工作内存的变量，它把一个从执行引擎接收到的值赋给工作内存中的变量，每当虚拟机遇到一个给变量赋值的字节码指令时执行这个操作。</li>
+<li><strong>write</strong>(写入)：作用于主内存的变量，它把 store 操作从工作内存中得到的变量的值放入主内存的变量中。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>– Page 365</p>
+</blockquote>
+<p>需要注意的是，上面👆提及的每一种操作都是原子的，，而不是『从内存中读取变量，然后修改变量，然后回写到内存』这整个过程是原子的。这意味着多线程情况下，不加干预时上面8种操作在线程间是交替进行的。如对主内存中的变量a、b 进行访问时，一种可能出现的顺序是 read a, read b, load b, load a..<br><img src="https://ws1.sinaimg.cn/large/71fd377dly1g0vwgqxcr3j20se0rcdi6.jpg" alt="@内存间交互操作"></p>
+<h5 id="volatile关键字"><a href="#volatile关键字" class="headerlink" title="volatile关键字"></a>volatile关键字</h5><blockquote>
+<p>当一个变量定义为 volatile 之后，它将具备两种特性，第一是保证此变量对所有线程的可见性，这里“可见性”是指当一条线程修改了这个变量的值，新值对于其他线程来说是立即得知的。而普通变量无法做到这一点，普通变量的值，在线程间传递均需要通过主内存来完成。例如，线程 A 修改一个普通变量的值，然后向主内存进行回写，另外一条线程 B 在线程A回写完成之后再从主内存进行读取操作，新变量的值才会对线程 B 可见。</p>
+</blockquote>
+<blockquote>
+<p>– Page 366</p>
+</blockquote>
+<p>不得不说的是，读到这里的时候很困惑，，volatile 是如何让被修改后的变量值立即被其他线程得知的呢？？？<br>这就不得不提到<a href="https://baike.baidu.com/item/MESI%E5%8D%8F%E8%AE%AE/22742331" target="_blank" rel="noopener">MESI协议</a>，MESI协议使用四个状态位描述每一个<a href="http://ifeve.com/disruptor-cacheline-padding/" target="_blank" rel="noopener">缓存行(Cache Line)</a>。关于缓存行，在这篇文章中只需要知道它是 <strong>cache 和 RAM 交换数据的最小单位,通常为 64 Byte</strong>就可以了。</p>
+<p>ok，下面简单说说MESI协议。</p>
+<ul>
+<li><strong>M(Modified)</strong>：表示当前 Cache 行中包含的数据与内存中的数据不一致，而且它仅在本 CPU 的 Cache 中有效，其他 CPU 的 Cache 中不存在拷贝，即这个 Cache 行的数据是当前处理器系统中最新的数据拷贝。当 CPU 对这个 Cache 行进行替换操作时，必然会引发系统总线的写周期，将 Cache 行中数据与内存中的数据同步。</li>
+<li><strong>E(Exclusive)</strong>：与 Modified 状态类似，唯一的区别是 Modified 状态表示当前 Cache Line 中的数据与内存中的数据不一致，而 Exclusive 状态下的 Cache 与内存中的数据一致。</li>
+<li><strong>S(Shared)</strong>：表示缓存行中包含的数据有效，而且在当前 CPU 和其他 CPU 中至少存在一个副本。在该缓存行中的数据是当前处理器系统中最新的数据拷贝，而且与内存中的数据一致。</li>
+</ul>
+<p><strong>I(Invalid)</strong>：表示当前缓存行中数据无效。</p>
+<p>在 MESI 缓存一致性协议下，我们看看在Java中 i++ 操作是怎么执行的。</p>
+<blockquote>
+<p>两个 CPU A、B(即多核多线程)同时执行 i++ 的操作，假设 i 初始值为0：</p>
+<ol>
+<li>CPU A 从主内存中读入(read) i 到工作内存，并载入(load)到副本，此时其他 CPU 的缓存中并不存在变量 i，所以 CPU A 中缓存行状态为 Exclusive。</li>
+<li>CPU B 从主内存中读入(read) i 到工作内存，并载入(load)到副本，发现 CPU A 的缓存中已经存在变量 i 了，那么CPU B 中工作缓存的相关缓存行设置为 Shared，CPU A 中的相关缓存行也设置为 Shared。</li>
+<li>CPU A 开始执行 i++，i 值加一等于一，但是只是在寄存器中，并未写入缓存，此时状态还是 Shared。</li>
+<li>CPU B 开始执行 i++，i值加一等于一，同上，还是 Shared。</li>
+<li>CPU A 将计算后的值重新赋值(assign)给缓存中的副本，i 值为1，缓存行状态改为 Modified，此时 CPU B 的缓存行状态改为 Invalid。</li>
+<li>CPU B 准备比赋值给缓存中 i 的副本时，发现缓存行已处于无效(Invalid)状态，需要从内存中重新读取(read)，又因为 CPU A 中相关缓存行中有变量 i 且为 Modified 状态，那么要求CPU A 将计算后的 i 值回写入(write)内存，内存中的 i 值为1，CPU A的缓存行状态为 Exclusive，CPU B 将内存中的 i 值读入(read+load)自己的缓存中的变量i的副本，此时CPU A、B 的缓存行都为 Shared，i 值都为1。</li>
+<li>CPU B 将 工作内存中的 i 值副本写入(write)到内存中，i 值副本此时为1，内存中的 i 值亦为1，即把1赋值给1，CPU B 中缓存行的状态变为 Modified，CPU A中的缓存行值变为Invalid。</li>
+</ol>
+</blockquote>
+<p><img src="https://ws1.sinaimg.cn/large/71fd377dly1g15x7ynu11j20bl08h0t8.jpg" alt="@MESI缓存一致性模型"></p>
+<p>以上👆即为不加人为干预情况(使用volatile、synchronized关键字)下 i++ 在多核多线程架构中可能产生的执行结果。所以 MESI 缓存一致性协议并不能保证<em>内存一致性</em>。另外，在上面的例子中，表述并不算太严谨，，比如关于提到的『工作内存』，在『深入理解Java虚拟机』中是这么说的：</p>
+<blockquote>
+<p>为了获取更好的运行速度，虚拟机(甚至是硬件系统本身的优化措施)可能会让工作内存优先存储于寄存器和高速缓存中，因为程序运行时主要访问读写的是工作内存。<br>– Page 364</p>
+</blockquote>
+<p>还有，在1、2中，CPU A、B read 并 load i 到工作内存中的副本中，在书中是这样说的：</p>
+<blockquote>
+<p>Java 内存模型只要求read、load和store、write操作必须按顺序执行，而没有保证是连续执行。也就是说，read与Load之间、stire与write之间是可插入其他质量的。如对内存中的变量a、b进行访问时，一种可能出现的顺序是read a、read b、load b、load a。<br>– Page365</p>
+</blockquote>
+<p>👆诸如此类，，所以，嗯，注意领会精神。</p>
+<p>OK，进行下一话题..<br>倘若此时我们使用 volatile 关键字修饰变量 i。因为 volatile 表示不使用寄存器的值，每次都从内存读(不包括缓存)。所以，在上边例子中的第三步，assign 工作内存中 i 的副本之后，立即将值回写到主内存中。书中的表述为：</p>
+<blockquote>
+<p>有 volatile 修饰的变量，在编译成汇编语言之后，比不使用 volatile 修饰变量多了一行<code>lock addl $0x0,(%esp)</code>,查询 IA32 手册得知，它的作用是使得本 CPU 的 Cache 写入了内存，该写入动作也会引起别的 CPU 或者别的内核无效化(Invalidate)其 Cache，这种操作相当于对 Cache 中的变量做了一次前面介绍Java内存模式中所说的“store”和“write”操作。所以通过这样一个操作，可让前面 volatile 变量的修改对其他 CPU 立即可见。</p>
+</blockquote>
+<p>写到这里，我们可能会觉得 i++ 被 volatile 修饰过之后，就可得到期望的 i 值。然而即使这样，我们得到的 i 值依然比期望值要小。</p>
+<blockquote>
+<p>问题就出在自增运算“i++”之中，我们用 javap 反编译这段代码后会发现只有一行 i++ 的代码在 Class 文件中是由4条字节码指令构成的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">// i 为静态变量</span><br><span class="line">0:  getstatic</span><br><span class="line">3:  iconst_1</span><br><span class="line">4:  iadd</span><br><span class="line">5:  putstatic</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>从字节码层面上很容易就分析出并发失败的原因了：当 getstatic 指令把 i 值取到操作栈时，volatile 关键字保证了 i 的值在此时是正确的，但是在执行 iconst_1、iadd 这些指令的时候，其他线程可能已经把 i 的值加大了，而在操作栈顶的值就变成了过期的数据，所以 putstatic 指令执行后就可能把较小的 i 值同步回主内存之中。<br>(PS: 一条字节码指令，也并不意味着执行这条指令就是一个原子操作。一条字节码指令在解释执行时，解释器将要运行许多行代码才能实现它的语义，如果是编译执行，一条字节码指令也可能转化为若干条本地机器码指令。)</p>
+</blockquote>
+<blockquote>
+<p>由于 volatile 变量只能保证可见性，在不符合一下两条规则的运算场景中，我们仍要通过锁(使用synchronized和java.util.conrurrent中的原子类)来保证原子性。</p>
+<ul>
+<li>运算结果并不依赖变量的当前值，或者能够确保只有单一线程修改变量的值。</li>
+<li>变量不需要与其他的状态变量共同参与不变约束</li>
+</ul>
+</blockquote>
+<p>所以，，此时如果要解决 i++ 的问题，靠 volatile 关键字是不行的，要么将 volatile 关键字改为 synchronized 关键字上锁(lock 作用于主内存，它把一个变量标识为一条线程独占的状态。)；要么，将 i++ 替换为 Java 并发工具包中的 AtomicInteger 类:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">AtomicInteger i = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line">...</span><br><span class="line">AtomicInteger.incrementAndGet();</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>参考链接：</p>
+<ol>
+<li><a href="https://tech.meituan.com/2018/11/15/java-lock.html" target="_blank" rel="noopener">不可不说的Java“锁”事</a></li>
+<li><a href="https://www.cnblogs.com/chuliang/p/8206748.html" target="_blank" rel="noopener">缓存一致性协议 mesi</a></li>
+<li><a href="https://blog.csdn.net/nch_ren/article/details/78924808" target="_blank" rel="noopener">volatile实现可见性的原理</a></li>
+<li><a href="https://blog.csdn.net/atsky0328/article/details/80422183" target="_blank" rel="noopener">cache一致性协议，MESI和MOESI</a></li>
+<li><a href="http://item.jd.com/11252778.html" target="_blank" rel="noopener">周志明-深入理解Java虚拟机</a></li>
+<li><a href="http://swiftlet.net/archives/3024" target="_blank" rel="noopener">一针见血系列[8]: 什么叫内存可见性？什么叫寄存器可见性？</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/43624414" target="_blank" rel="noopener">MESI与内存屏障</a></li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小哪吒 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小哪吒 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Java/" rel="tag"><i class="fa fa-tag"></i> Java</a>
+          
+            <a href="/tags/线程安全/" rel="tag"><i class="fa fa-tag"></i> 线程安全</a>
+          
+        </div>
+      
+
+      <div>
+        
+          
+
+        
+      </div>
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/12/31/ProustQA_2018/" rel="next" title="普鲁斯特问卷-2018">
+                <i class="fa fa-chevron-left"></i> 普鲁斯特问卷-2018
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/13/Java_happens_before/" rel="prev" title="先行发生原则">
+                先行发生原则 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpeg" alt="小哪吒">
+            
+              <p class="site-author-name" itemprop="name">小哪吒</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="0">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="1">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="2">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="3">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="4">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href=":" target="_blank" title="5">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="6">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="7">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="8">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="9">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="10">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="11">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="12">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="13">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="14">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="15">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="u" target="_blank" title="16">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="17">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="c" target="_blank" title="18">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="19">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="m" target="_blank" title="20">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="21">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="22">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="23">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="24">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="25">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="l" target="_blank" title="26">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="27">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="28">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="29">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="30">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="31">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="32">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="33">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="34">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="35">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="36">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="37">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="38">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="n" target="_blank" title="39">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="g" target="_blank" title="40">
+                    </a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Context"><span class="nav-number">1.</span> <span class="nav-text">Context</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java内存模型与线程"><span class="nav-number">2.</span> <span class="nav-text">Java内存模型与线程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#硬件的效率与一致性"><span class="nav-number">2.1.</span> <span class="nav-text">硬件的效率与一致性</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Java内存模型"><span class="nav-number">2.2.</span> <span class="nav-text">Java内存模型</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#volatile关键字"><span class="nav-number">2.3.</span> <span class="nav-text">volatile关键字</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+  <div class="footer-custom">备案：<span>冀ICP备18000816号</span></div>
+
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小哪吒</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">95.2k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://someoneiscoding.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.someoneiscoding.com/2019/03/08/about_java_microcosmic_i++/';
+          this.page.identifier = '2019/03/08/about_java_microcosmic_i++/';
+          this.page.title = '关于微观下i++的并发执行';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://someoneiscoding.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+</body>
+</html>

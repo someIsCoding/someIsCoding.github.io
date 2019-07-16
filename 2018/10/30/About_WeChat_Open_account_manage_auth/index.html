@@ -1,0 +1,1514 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Keyboard-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Keyboard-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/Keyboard-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/Keyboard.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="微信,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Context最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过微信提供的接口创建微信开放平台，然后绑定另一个appid即可。 想想也没啥，之前也为其他客户部署过，无非是调用两次接口：一次创建，一次绑定，，齐活~ BUT！！！但！！！这次搞的格">
+<meta name="keywords" content="微信">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于微信开放平台账号管理权限">
+<meta property="og:url" content="http://www.someoneiscoding.com/2018/10/30/About_WeChat_Open_account_manage_auth/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="Context最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过微信提供的接口创建微信开放平台，然后绑定另一个appid即可。 想想也没啥，之前也为其他客户部署过，无非是调用两次接口：一次创建，一次绑定，，齐活~ BUT！！！但！！！这次搞的格">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-10-30T15:30:08.586Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于微信开放平台账号管理权限">
+<meta name="twitter:description" content="Context最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过微信提供的接口创建微信开放平台，然后绑定另一个appid即可。 想想也没啥，之前也为其他客户部署过，无非是调用两次接口：一次创建，一次绑定，，齐活~ BUT！！！但！！！这次搞的格">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://www.someoneiscoding.com/2018/10/30/About_WeChat_Open_account_manage_auth/">
+
+
+
+
+
+  <title>关于微信开放平台账号管理权限 | 程序员的自我修养</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '[object Object]', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8cde3514bfbe2b3535033e604f0bb850";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员的自我修养</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://www.someoneiscoding.com/2018/10/30/About_WeChat_Open_account_manage_auth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小哪吒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">关于微信开放平台账号管理权限</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-30T23:30:08+08:00">
+                2018-10-30
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-10-30T23:30:08+08:00">
+                2018-10-30
+              </time>
+            
+          </span>
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java后时代/" itemprop="url" rel="index">
+                    <span itemprop="name">Java后时代</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/10/30/About_WeChat_Open_account_manage_auth/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/10/30/About_WeChat_Open_account_manage_auth/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  1,083
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  4
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="Context"><a href="#Context" class="headerlink" title="Context"></a>Context</h4><p>最近在为客户部署小程序时遇到一个问题，通过日志定位到问题是，，没有获取到小程序用户的UnionID，导致无法对小程序用户和卡包(公众号)用户形成有效的映射，bulabula…总之，翻到日志才想起来，应该通过<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1498704199_1bcax&token=6616e998e48175a3d6490042d013a5bc53b4acef&lang=zh_CN" target="_blank" rel="noopener">微信提供的接口</a>创建微信开放平台，然后绑定另一个appid即可。</p>
+<p>想想也没啥，之前也为其他客户部署过，无非是调用两次接口：一次创建，一次绑定，，齐活~</p>
+<h4 id="BUT！！！"><a href="#BUT！！！" class="headerlink" title="BUT！！！"></a>BUT！！！</h4><p>但！！！这次搞的格外艰辛，微信服务器一直返回</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">   <span class="attr">"errcode"</span>:<span class="number">40013</span>,</span><br><span class="line">   <span class="attr">"errmsg"</span>:<span class="string">"invalid appid hint: [iAEcfA03241959]"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>日狗，真心日狗！确定一定以及肯定，两个appid都没问题，，因为通过<strong><a href="https://api.weixin.qq.com/cgi-bin/open/create?access_token=xxxx" target="_blank" rel="noopener">创建 开放平台帐号并绑定公众号/小程序</a></strong>接口，两个appid都可以创建开放平台。<br>搞到这儿也<span id="ques">想到一个问题</span>，，</p>
+<blockquote>
+<p>我想通过接口，把客户的小程序和公众号绑在同一个开放平台，，无疑，小程序肯定是授权给第三方平台的。倘若，我用小程序的<code>appid</code>，创建开放平台，然后将公众号的<code>appid</code>绑到小程序创建的开放平台上。<br>那么问题来了，，公众号需要将<code>开放平台账号管理权限</code>授权给第三方平台么？？？</p>
+</blockquote>
+<p>为了赶紧绑定成功先，暂时将公众号的开放平台账号管理权限授权给第三方平台了。</p>
+<h4 id="Succeed？？"><a href="#Succeed？？" class="headerlink" title="Succeed？？"></a>Succeed？？</h4><p>我疯了，成功疯了。。最后找之前没接触过这块儿的同事从阅读文档开始，慢慢review代码。刚开始也是不行，，后来他要静静，然后闷头搞。<br>…<br>一会儿，，诶？我好像创建成功了？！</p>
+<p>稀里糊涂的 创建成功了，，然后我要求他复盘整个流程。</p>
+<ol>
+<li>分别用两个<code>appid</code>都创建开放平台；</li>
+<li>然后在小程序后台解绑开放平台；</li>
+<li>通过接口将小程序的appid绑定到公众号创建的开放平台账号上。</li>
+</ol>
+<p>前两步都没啥，但是第三步！我在调用接口的地址上发现点端倪，跟我之前调用时写的不一样，然后就提醒他这儿应该写公众号的<code>appid</code>，而不是小程序的。他突然也想到了些什么，很肯定的说，上次绑定成功的时候就是这样写的！</p>
+<p>终于找到问题所在，，验证，成功！！！<br>在这儿详细复盘下，给大家伙儿做个参考，，</p>
+<p>我将文档中<code>将 公众号/小程序绑定到开放平台帐号下</code>的接口封装成我们自己的接口，，伪代码如下👇</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 将 公众号/小程序绑定到开放平台帐号下</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@Attention</span> 该API用于将一个尚未绑定开放平台帐号的公众号或小程序绑定至指定开放平台帐号上。二者须主体相同。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">bindOpen</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    String appid = getPara(<span class="string">"appId"</span>);</span><br><span class="line">    String open_appid = getPara(<span class="string">"open_appid"</span>);</span><br><span class="line">    String target_appid = getPara(<span class="string">"target_appid"</span>);</span><br><span class="line">    <span class="keyword">final</span> String BIND_OPEN = <span class="string">"https://api.weixin.qq.com/cgi-bin/open/bind?access_token="</span> + getAuthorizerAccessToken(appid);</span><br><span class="line">	String result = HttpUtils.post(BIND_OPEN, Kv.set(<span class="string">"appid"</span>, target_appid).set(<span class="string">"open_appid"</span>, open_appid).toJson());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>失败</code>：我之前的绑定方式，，</p>
+<ol>
+<li>通过小程序<code>appid</code>创建开放平台；</li>
+<li>调用接口<code>http://IP:Port/path/bindOpen?appId=小程序APPID&amp;open_appid=开放平台账号&amp;target_appid=公众号APPID</code>。</li>
+</ol>
+<p>👆In a word，，<strong>使用 A 创建开放平台，然后使用 A 的access_token绑定 B。</strong><br>报错<code>{&quot;errcode&quot;:40013,&quot;errmsg&quot;:&quot;invalid appid hint: [iAEcfA03241959]&quot;}</code></p>
+<hr>
+<p><code>成功</code>：同事的绑定方式，，</p>
+<ol>
+<li>使用公众号的<code>appid</code>创建开放平台账号；</li>
+<li>调用接口<code>http://IP:Port/path/bindOpen?appId=小程序APPID&amp;open_appid=开放平台账号&amp;target_appid=小程序APPID</code>。</li>
+</ol>
+<p>👆In a word，，<strong>使用 A 创建开放平台，然后使用 B 的access_token绑定 B。</strong></p>
+<p>至此，，问题解决！另外，<a href="#ques">之前的问题</a>也迎刃而解：<strong>公众号和小程序都需要将开放平台账号管理权限授权给第三方平台</strong>。</p>
+<p>想想也是，当初将小程序和公众号的权限授权给第三方平台时也是这样，，<strong>标的主动绑定平台，而不是平台主动绑定标的</strong>。</p>
+<h4 id="One-more-thing"><a href="#One-more-thing" class="headerlink" title="One more thing"></a>One more thing</h4><p>嗯，希望<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&t=resource/res_list&verify=1&id=open1498704199_1bcax&token=6616e998e48175a3d6490042d013a5bc53b4acef&lang=zh_CN" target="_blank" rel="noopener">微信开放平台帐号管理</a>完档越来月完善，，意味深长的微笑 🙂。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小哪吒 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小哪吒 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/微信/" rel="tag"><i class="fa fa-tag"></i> 微信</a>
+          
+        </div>
+      
+
+      <div>
+        
+          
+
+        
+      </div>
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/10/11/mistake_in_Wechat-public-account_passvely_reply_text_message/" rel="next" title="关于『该公众号提供的服务出现故障，请稍后再试』">
+                <i class="fa fa-chevron-left"></i> 关于『该公众号提供的服务出现故障，请稍后再试』
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/10/about_nginx_log_analyse/" rel="prev" title="关于 nginx 日志分析">
+                关于 nginx 日志分析 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpeg" alt="小哪吒">
+            
+              <p class="site-author-name" itemprop="name">小哪吒</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="0">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="1">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="2">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="3">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="4">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href=":" target="_blank" title="5">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="6">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="7">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="8">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="9">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="10">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="11">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="12">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="13">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="14">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="15">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="u" target="_blank" title="16">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="17">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="c" target="_blank" title="18">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="19">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="m" target="_blank" title="20">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="21">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="22">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="23">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="24">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="25">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="l" target="_blank" title="26">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="27">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="28">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="29">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="30">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="31">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="32">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="33">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="34">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="35">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="36">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="37">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="38">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="n" target="_blank" title="39">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="g" target="_blank" title="40">
+                    </a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Context"><span class="nav-number">1.</span> <span class="nav-text">Context</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BUT！！！"><span class="nav-number">2.</span> <span class="nav-text">BUT！！！</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Succeed？？"><span class="nav-number">3.</span> <span class="nav-text">Succeed？？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#One-more-thing"><span class="nav-number">4.</span> <span class="nav-text">One more thing</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+  <div class="footer-custom">备案：<span>冀ICP备18000816号</span></div>
+
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小哪吒</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">95.2k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://someoneiscoding.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'http://www.someoneiscoding.com/2018/10/30/About_WeChat_Open_account_manage_auth/';
+          this.page.identifier = '2018/10/30/About_WeChat_Open_account_manage_auth/';
+          this.page.title = '关于微信开放平台账号管理权限';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://someoneiscoding.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+</body>
+</html>
