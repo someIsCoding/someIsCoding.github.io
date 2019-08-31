@@ -95,21 +95,21 @@
 
 
 
-<meta name="description" content="节选自 王宝令-Java变法编程实战 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来我找到了原因：J">
+<meta name="description" content="节选自 王宝令-Java变法编程实战，欢迎大家订阅~ 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来">
 <meta name="keywords" content="并发编程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="管程：并发编程的万能钥匙">
 <meta property="og:url" content="http://www.someoneiscoding.com/2019/08/03/Monitor-The_Universal_Key_of_Concurrent_Programming/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
-<meta property="og:description" content="节选自 王宝令-Java变法编程实战 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来我找到了原因：J">
+<meta property="og:description" content="节选自 王宝令-Java变法编程实战，欢迎大家订阅~ 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mkwqbix2j20vq0ju797.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5ml1a6vpmj20vq0l9di7.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mmt3dm8ij20vq0ju0un.jpg">
-<meta property="og:updated_time" content="2019-08-03T10:36:17.212Z">
+<meta property="og:updated_time" content="2019-08-25T12:01:50.455Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="管程：并发编程的万能钥匙">
-<meta name="twitter:description" content="节选自 王宝令-Java变法编程实战 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来我找到了原因：J">
+<meta name="twitter:description" content="节选自 王宝令-Java变法编程实战，欢迎大家订阅~ 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来">
 <meta name="twitter:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mkwqbix2j20vq0ju797.jpg">
 
 
@@ -380,8 +380,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-08-03T18:36:17+08:00">
-                2019-08-03
+              <time title="更新于" itemprop="dateModified" datetime="2019-08-25T20:01:50+08:00">
+                2019-08-25
               </time>
             
           </span>
@@ -444,7 +444,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  3,605
+                  3,611
                 </span>
               
 
@@ -481,7 +481,7 @@
       
 
       
-        <p>节选自 王宝令-Java变法编程实战</p>
+        <p>节选自 <a href="http://gk.link/a/106Xr" target="_blank" rel="noopener">王宝令-Java变法编程实战</a>，欢迎大家订阅~</p>
 <h4 id="什么是管程"><a href="#什么是管程" class="headerlink" title="什么是管程"></a>什么是管程</h4><p>不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 <code>synchronized</code> 关键字及 <code>wait()</code>、<code>notify()</code>、<code>notifyAll()</code> 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来我找到了原因：Java 采用的是管程技术，<code>synchronized</code> 关键字及 <code>wait()</code>、<code>notify()</code>、<code>notifyAll()</code> 这三个方法都是管程的组成部分。而<strong>管程和信号量是等价的，所谓等价指的是用管程能够实现信号量，也能用信号量实现管程</strong>。但是管程更加容易使用，所以 Java 选择了管程。</p>
 <p>管程，对应的英文是 Monitor，很多 Java 领域的同学都喜欢将其翻译成“监视器”，这是直译。操作系统领域一般都翻译成“管程”，这个是意译，而我自己也更倾向于使用“管程”。</p>
 <p>所谓<strong>管程，指的是管理共享变量以及对共享变量的操作过程，让他们支持并发。翻译为 Java 领域的语言，就是管理类的成员变量和成员方法，让这个类是线程安全的</strong>。那管程是怎么管的呢？</p>
