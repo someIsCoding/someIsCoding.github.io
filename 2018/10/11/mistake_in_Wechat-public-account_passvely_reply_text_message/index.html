@@ -103,12 +103,12 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="Context按照惯例先说上下文环境，，是这样，，公司需要做个功能:  对ERP用户和公司公众号用户做映射，然后向该用户推送相应角色的经营日报模板消息。 实现流程:1.通过微信接口生成带参二维码;2.用户用微信扫一扫功能扫描生成的带参二维码;3.获取二维码中的客户识别码和用户的openid;4.被动回复用户文本消息(附超链接),引导用户完成绑定过程。  Tips总的来说是没啥难度的，，过程还算顺利">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fw49dc0xwpj20u01hcq5q.jpg">
-<meta property="og:updated_time" content="2018-10-11T06:40:36.000Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131835-%E8%A2%AB%E5%8A%A8%E5%9B%9E%E5%A4%8D%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF%E6%8A%A5%E9%94%99.jpeg">
+<meta property="og:updated_time" content="2019-09-01T05:42:58.388Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于『该公众号提供的服务出现故障，请稍后再试』">
 <meta name="twitter:description" content="Context按照惯例先说上下文环境，，是这样，，公司需要做个功能:  对ERP用户和公司公众号用户做映射，然后向该用户推送相应角色的经营日报模板消息。 实现流程:1.通过微信接口生成带参二维码;2.用户用微信扫一扫功能扫描生成的带参二维码;3.获取二维码中的客户识别码和用户的openid;4.被动回复用户文本消息(附超链接),引导用户完成绑定过程。  Tips总的来说是没啥难度的，，过程还算顺利">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fw49dc0xwpj20u01hcq5q.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131835-%E8%A2%AB%E5%8A%A8%E5%9B%9E%E5%A4%8D%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF%E6%8A%A5%E9%94%99.jpeg">
 
 
 
@@ -378,8 +378,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-10-11T14:40:36+08:00">
-                2018-10-11
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:42:58+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -500,7 +500,7 @@
 <h6 id="scancode-waitmsg"><a href="#scancode-waitmsg" class="headerlink" title="scancode_waitmsg"></a>scancode_waitmsg</h6><p>看样子只能使用 scancode_waitmsg，这种方式既可以获取客户识别码，又可以获取到用户openid，，然鹅，之后只能下发消息，不能直接跳转到指定页面。在一堆汉字文本中显示链接真的好吗？！<br>就在这时，，【花点时间】给我推送消息了(其实我更喜欢『花加』,笑哭)。同样是文本消息，但是有超链接！！</p>
 <h5 id="文本消息中的链接优雅的显示方式"><a href="#文本消息中的链接优雅的显示方式" class="headerlink" title="文本消息中的链接优雅的显示方式"></a>文本消息中的链接优雅的显示方式</h5><p>对，，就是超链接，而不是赤果果的将网址堆在一堆汉字中。</p>
 <p>实现起来很简单，，就是把链接放在 a 标签的 href 属性中，剩下的就是拼接字符串儿了。。</p>
-<h4 id="终于到正题儿了"><a href="#终于到正题儿了" class="headerlink" title="终于到正题儿了"></a>终于到正题儿了</h4><p>终于，，然而，为什么每次收到文本消息前总是报错？<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fw49dc0xwpj20u01hcq5q.jpg" alt="被动回复文本消息"></p>
+<h4 id="终于到正题儿了"><a href="#终于到正题儿了" class="headerlink" title="终于到正题儿了"></a>终于到正题儿了</h4><p>终于，，然而，为什么每次收到文本消息前总是报错？<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131835-%E8%A2%AB%E5%8A%A8%E5%9B%9E%E5%A4%8D%E6%96%87%E6%9C%AC%E6%B6%88%E6%81%AF%E6%8A%A5%E9%94%99.jpeg" alt="被动回复文本消息"></p>
 <p>本以为是ngrok不稳定的原因，，但报错问题出现的太规律了，应该不是它(事实上它太稳定了，感谢开源！)。<br>直到看到了<a href="https://blog.csdn.net/buoll/article/details/54150865" target="_blank" rel="noopener">微信开发出现“该公众号暂时无法提供服务，请稍后再试”的坑</a>，虽然最终遇到的问题不一样，但还是收到启发了，，那就是『第三方平台授权』的问题。因为我司之前做模板小程序的时候真的有将『北京众阳软件』公众号授权给『众阳宜商信息技术有限公司』第三方平台，，做授权测试嘛。但我记得后来改为只授权公众号的『开放平台账号管理权限』，其他权限都取消了呀？！咦，，登陆公众号微信后台之后，在『功能』-&gt;『自动回复』&gt;&gt;『被关注回复』中看到有第三方平台授权管理。哦，原来还有其他第三方平台，，唤作『魔盒』什么的。其中就将公众号的『消息回复』权限。怪不得，，每次被动回复前，先向『魔盒』服务器下发消息，失败后再向公众号服务器地址下发消息。所以，，每次所谓的服务器出现故障，是魔盒的问题！</p>
 <p>Binggo！！取消授权之后，一切都那么清净~</p>
 
@@ -671,7 +671,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -973,7 +973,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 

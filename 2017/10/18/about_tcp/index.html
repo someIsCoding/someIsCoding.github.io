@@ -103,14 +103,14 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="关于TCPTCP 简介TCP协议具体是什么，不赘述，百度之。 我们经常听人说 TCP 是一个面向连接的(connection-oriented)、可靠的(reliable)、字节流式(byte stream)传输协议，TCP 的这三个特性该怎么理解呢？  面向连接：在应用 TCP 协议进行通信之前双方通常需要通过三次握手来建立 TCP 连接，连接建立后才能进行正常的数据传输，因此广播和多播不会承载">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fknyzzbaddj20id05jq32.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fkmp0che2kj20m80fogpj.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fkny8g3x2gj20ff06d3yj.jpg">
-<meta property="og:updated_time" content="2017-12-19T01:12:37.444Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP_in_IP.png">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP-Header.png">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP_%E6%BB%91%E7%AA%97.png">
+<meta property="og:updated_time" content="2019-09-01T05:53:12.529Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="关于TCP协议">
 <meta name="twitter:description" content="关于TCPTCP 简介TCP协议具体是什么，不赘述，百度之。 我们经常听人说 TCP 是一个面向连接的(connection-oriented)、可靠的(reliable)、字节流式(byte stream)传输协议，TCP 的这三个特性该怎么理解呢？  面向连接：在应用 TCP 协议进行通信之前双方通常需要通过三次握手来建立 TCP 连接，连接建立后才能进行正常的数据传输，因此广播和多播不会承载">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fknyzzbaddj20id05jq32.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP_in_IP.png">
 
 
 
@@ -380,8 +380,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-19T09:12:37+08:00">
-                2017-12-19
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:53:12+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -496,8 +496,8 @@
 <li><p>字节流式：<strong>应用层发送的数据会在 TCP 的发送端缓存起来，统一分片(例如一个应用层的数据包分成两个 TCP 包)或者打包(例如两个或者多个应用层的数据包打包成一个 TCP 数据包)发送，到接收端的时候接收端也是直接按照字节流将数据传递给应用层</strong>。作为对比，同样是传输层的协议，UDP 并不会对应用层的数据包进行打包和分片的操作，一般一个应用层的数据包就对应一个 UDP 包。这个也是伴随 TCP 窗口管理、拥塞控制等。</p>
 </li>
 </ul>
-<h4 id="TCP-的封装和协议头格式"><a href="#TCP-的封装和协议头格式" class="headerlink" title="TCP 的封装和协议头格式"></a>TCP 的封装和协议头格式</h4><h5 id="TCP-封装在IP报文中，如下图所示"><a href="#TCP-封装在IP报文中，如下图所示" class="headerlink" title="TCP 封装在IP报文中，如下图所示"></a>TCP 封装在IP报文中，如下图所示</h5><p><img src="http://ww1.sinaimg.cn/large/71fd377dly1fknyzzbaddj20id05jq32.jpg" alt></p>
-<h5 id="TCP-的协议头格式"><a href="#TCP-的协议头格式" class="headerlink" title="TCP 的协议头格式"></a>TCP 的协议头格式</h5><p><img src="http://ww1.sinaimg.cn/large/71fd377dly1fkmp0che2kj20m80fogpj.jpg" alt="TCP协议头"></p>
+<h4 id="TCP-的封装和协议头格式"><a href="#TCP-的封装和协议头格式" class="headerlink" title="TCP 的封装和协议头格式"></a>TCP 的封装和协议头格式</h4><h5 id="TCP-封装在IP报文中，如下图所示"><a href="#TCP-封装在IP报文中，如下图所示" class="headerlink" title="TCP 封装在IP报文中，如下图所示"></a>TCP 封装在IP报文中，如下图所示</h5><p><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP_in_IP.png" alt="TCP_in_IP"></p>
+<h5 id="TCP-的协议头格式"><a href="#TCP-的协议头格式" class="headerlink" title="TCP 的协议头格式"></a>TCP 的协议头格式</h5><p><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP-Header.png" alt="TCP-Header"></p>
 <ul>
 <li><strong><code>Source Port</code></strong>(源端口号)和<strong><code>Destination Port</code></strong>(目标端口号):各2字节<br>用于区别主机中的不同进程。IP 地址用来区分不同的主机。<strong>如此，源 IP 地址+源端口号与目标 IP 地址+目标端口号就能确定唯一的 TCP 连接；</strong></li>
 <li><span id="jump_seq"> <strong><code>Sequence Number</code></strong>(序列号&amp;封包序号):4字节<br>定义了指派给本报文段第一个数据字节的编号。用来标识从TCP发送端向TCP接收端发送的数据字节流，它表示在这个报文段中的第一个数据字节在数据流中的序号。由于 TCP 封包必须要带入 IP 封包当中，所以如果 TCP 数据太大时(大于 IP 封包的容许程度)，就得要进行分段。这个 Sequence Number 就是记录每个封包的序号，可以让收收端重新将 TCP 的数据组合起来。<strong>建立连接时，双方使用各自的随机数生成器生产一个初始序号(inital squence number，ISN)，通常两个方向上的 ISN 是不同的。</strong>主要用来解决网络报乱序(reordering)的问题。</span></li>
@@ -515,7 +515,7 @@
 <li><span id="jump_FIN"><code>FIN</code>(Finish)：带有该标志置位的数据包用来结束一个TCP会话(连接)，但对应端口仍处于开放状态，准备接收后续数据。当<code>FIN</code>标志有效的时候我们称呼这个包为<code>FIN</code>包。这个标志的数据包也经常被用于进行端口扫描。</span></li>
 </ul>
 </li>
-<li><strong><code>Window</code></strong>(滑动窗口):2字节<br>用来控制对方发送的数据量，可以告知对方目前本身有的缓冲器容量(Receive Buffer) 还可以接收封包。当 Window=0 时，代表缓冲器已经额满，所以应该要暂停传输数据。传输数据单位为字节。TCP连接的一端根据设置的缓存空间大小确定自己的接收窗口大小，然后通知对方以确定对方的发送窗口的上限,这个值是本机期望一次接收的字节数。用于TCP的流量控制；<br>在TCP的发送端和接收端都会维持一个窗口，因为一个 TCP 连接是双向的，因此实际上一个 TCP 连接一共有四个窗口。此处我们先简单介绍一个发送端的窗口如下。图中的数字表示 byte 也就是和上面介绍的TCP协议头中的SN是对应的，3号 byte 以及3号之前的数据表示已经发送并且收到了接收端的<a href="#jump_ACK"><code>ACK</code></a>确认包的数据；4、5、6三个 byte 表示当前可以发送的数据包，也有可能已经已经发送了但是还没有收到<a href="#jump_ACK"><code>ACK</code></a>确认包；7号 byte 及之后的数据表示为了控制发送速率暂时不能发送的数据。其中4-6这三个 byte 就称呼为窗口大小(<em>window size</em>)。当 TCP 连接建立的时候，双方会通过 TCP 头中的窗口大小字段向对方通告自己接收端的窗口大小，发送端依据接收端通告的窗口大小来设置发送端的发送窗口大小，另外在拥塞控制的时候也是通过调整发送端的发送窗口来调整发送速率的。窗口这个词的来源就是当我们从这一个数据序列中单独看4、5、6这几个 byte 的时候，我们仿佛是从一个”窗口”中观察的一样。<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fkny8g3x2gj20ff06d3yj.jpg" alt="TCP_Windows"></li>
+<li><strong><code>Window</code></strong>(滑动窗口):2字节<br>用来控制对方发送的数据量，可以告知对方目前本身有的缓冲器容量(Receive Buffer) 还可以接收封包。当 Window=0 时，代表缓冲器已经额满，所以应该要暂停传输数据。传输数据单位为字节。TCP连接的一端根据设置的缓存空间大小确定自己的接收窗口大小，然后通知对方以确定对方的发送窗口的上限,这个值是本机期望一次接收的字节数。用于TCP的流量控制；<br>在TCP的发送端和接收端都会维持一个窗口，因为一个 TCP 连接是双向的，因此实际上一个 TCP 连接一共有四个窗口。此处我们先简单介绍一个发送端的窗口如下。图中的数字表示 byte 也就是和上面介绍的TCP协议头中的SN是对应的，3号 byte 以及3号之前的数据表示已经发送并且收到了接收端的<a href="#jump_ACK"><code>ACK</code></a>确认包的数据；4、5、6三个 byte 表示当前可以发送的数据包，也有可能已经已经发送了但是还没有收到<a href="#jump_ACK"><code>ACK</code></a>确认包；7号 byte 及之后的数据表示为了控制发送速率暂时不能发送的数据。其中4-6这三个 byte 就称呼为窗口大小(<em>window size</em>)。当 TCP 连接建立的时候，双方会通过 TCP 头中的窗口大小字段向对方通告自己接收端的窗口大小，发送端依据接收端通告的窗口大小来设置发送端的发送窗口大小，另外在拥塞控制的时候也是通过调整发送端的发送窗口来调整发送速率的。窗口这个词的来源就是当我们从这一个数据序列中单独看4、5、6这几个 byte 的时候，我们仿佛是从一个”窗口”中观察的一样。<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131900-TCP_%E6%BB%91%E7%AA%97.png" alt="TCP_滑窗"></li>
 <li><strong><code>Checksum</code></strong>(校验位):2字节<br>发送端基于数据内容计算一个数值，接收端要与发送端数值结果完全一样，才能证明数据的有效性。接收端checksum校验失败的时候会直接丢掉这个数据包。CheckSum是根据伪头+TCP头+TCP数据三部分进行计算的。另外对于大的数据包，checksum并不能可靠的反应比特错误，应用层应该再添加自己的校验方式；</li>
 <li><strong><code>Urgent Pointer</code></strong>(紧急指针):2字节<br>指向后面是优先数据的字节,指出在本报文段中的紧急数据的最后一个字节的序号，在<a href="#jump_URG"><code>URG</code></a>=1时有效。如果URG标志没有被设置，紧急域作为填充。加快处理标示为紧急的数据段;</li>
 <li><strong><code>Options</code></strong>(选项):TCP首部可以有多达40字节的可选信息，用于把附加信息传递给终点，或用来对齐其它选项。</li>
@@ -690,7 +690,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -992,7 +992,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 

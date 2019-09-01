@@ -103,12 +103,12 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="理解与使用Javascript中的回调函数有点小感慨在这不得不提一下Python，在人工智能火起来之前就在断断续续的看教程。现在因为人工智能的原因，更要好好学习一下，，在学习的过程中了，第一次好像明白『函数式编程』到底是怎么一回事儿了。放张图，各位体会下，，👇因为最近工作的原因，先后遇到了几个关于js的问题，没想到需要阅读的Tab页越来越多，需要总结的页是越来越多。这个过程中，没想到朝夕相处的j">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm8k6u2xj7j21zz131dkm.jpg">
-<meta property="og:updated_time" content="2018-01-21T15:29:18.792Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901132806-编程语言的抽象层次.png">
+<meta property="og:updated_time" content="2019-09-01T05:28:22.240Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="理解与使用Javascript中的回调函数">
 <meta name="twitter:description" content="理解与使用Javascript中的回调函数有点小感慨在这不得不提一下Python，在人工智能火起来之前就在断断续续的看教程。现在因为人工智能的原因，更要好好学习一下，，在学习的过程中了，第一次好像明白『函数式编程』到底是怎么一回事儿了。放张图，各位体会下，，👇因为最近工作的原因，先后遇到了几个关于js的问题，没想到需要阅读的Tab页越来越多，需要总结的页是越来越多。这个过程中，没想到朝夕相处的j">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm8k6u2xj7j21zz131dkm.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901132806-编程语言的抽象层次.png">
 
 
 
@@ -378,8 +378,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-01-21T23:29:18+08:00">
-                2018-01-21
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:28:22+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -479,7 +479,7 @@
       
 
       
-        <h3 id="理解与使用Javascript中的回调函数"><a href="#理解与使用Javascript中的回调函数" class="headerlink" title="理解与使用Javascript中的回调函数"></a>理解与使用Javascript中的回调函数</h3><h4 id="有点小感慨"><a href="#有点小感慨" class="headerlink" title="有点小感慨"></a>有点小感慨</h4><p>在这不得不提一下Python，在人工智能火起来之前就在断断续续的看教程。现在因为人工智能的原因，更要好好学习一下，，在学习的过程中了，第一次好像明白『函数式编程』到底是怎么一回事儿了。放张图，各位体会下，，👇<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fm8k6u2xj7j21zz131dkm.jpg" alt="编程语言的抽象层次"><br>因为最近工作的原因，先后遇到了几个关于js的问题，没想到需要阅读的Tab页越来越多，需要总结的页是越来越多。这个过程中，没想到朝夕相处的js中也有类似的特性，，比如闭包，之前特地去了解，可还是半知半解，，如今从Python反观js，一下子通透了~哈哈，下面进入正文</p>
+        <h3 id="理解与使用Javascript中的回调函数"><a href="#理解与使用Javascript中的回调函数" class="headerlink" title="理解与使用Javascript中的回调函数"></a>理解与使用Javascript中的回调函数</h3><h4 id="有点小感慨"><a href="#有点小感慨" class="headerlink" title="有点小感慨"></a>有点小感慨</h4><p>在这不得不提一下Python，在人工智能火起来之前就在断断续续的看教程。现在因为人工智能的原因，更要好好学习一下，，在学习的过程中了，第一次好像明白『函数式编程』到底是怎么一回事儿了。放张图，各位体会下，，👇<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901132806-编程语言的抽象层次.png" alt="编程语言的抽象层次"><br>因为最近工作的原因，先后遇到了几个关于js的问题，没想到需要阅读的Tab页越来越多，需要总结的页是越来越多。这个过程中，没想到朝夕相处的js中也有类似的特性，，比如闭包，之前特地去了解，可还是半知半解，，如今从Python反观js，一下子通透了~哈哈，下面进入正文</p>
 <hr>
 <p>Javascript中，函数是<a href="http://cnodejs.org/topic/545ca6be0ed03d8070d09992" target="_blank" rel="noopener">第一类对象</a>，这意味着函数可以像对象一样按照第一类管理被使用。既然函数实际上是对象：它们能被“存储”在变量中，能作为函数参数被传递，能在函数中被创建，能从函数中返回。</p>
 <p>因为函数是第一类对象，我们可以在Javascript使用回调函数。在下面的文章中，我们将学到关于回调函数的方方面面。回调函数可能是在Javascript中使用最多的函数式编程技巧，虽然在字面上看起来它们一直一小段Javascript或者jQuery代码，但是对于许多开发者来说它任然是一个谜。在阅读本文之后你能了解怎样使用回调函数。</p>
@@ -679,7 +679,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -981,7 +981,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 

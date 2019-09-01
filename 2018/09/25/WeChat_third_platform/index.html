@@ -103,12 +103,12 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="时至今日，，作为第三方平台开发的小程序已经上线有一段时间了，第一次经历整个开发流程。再回首，尝试着从宏观上梳理下『当我们谈微信第三方平台时我们在谈什么』。同样，，不涉及代码级的具体实现。 BTW，关于微信开放平台顺便聊聊微信开放平台先，，登陆微信开放平台后，进入『管理中心』Tab。我们可以看到页面中有5个二级Tab，分别是『移动应用、网站应用、公众账号、小程序、第三方平台』。OK，微信开放平台，顾">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fvm8kqdnnaj227d18nqd7.jpg">
-<meta property="og:updated_time" content="2018-09-30T03:01:48.698Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901133656-微信第三方平台全网发布检测.jpg">
+<meta property="og:updated_time" content="2019-09-01T05:37:11.854Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="微信第三方平台">
 <meta name="twitter:description" content="时至今日，，作为第三方平台开发的小程序已经上线有一段时间了，第一次经历整个开发流程。再回首，尝试着从宏观上梳理下『当我们谈微信第三方平台时我们在谈什么』。同样，，不涉及代码级的具体实现。 BTW，关于微信开放平台顺便聊聊微信开放平台先，，登陆微信开放平台后，进入『管理中心』Tab。我们可以看到页面中有5个二级Tab，分别是『移动应用、网站应用、公众账号、小程序、第三方平台』。OK，微信开放平台，顾">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dly1fvm8kqdnnaj227d18nqd7.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901133656-微信第三方平台全网发布检测.jpg">
 
 
 
@@ -378,8 +378,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2018-09-30T11:01:48+08:00">
-                2018-09-30
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:37:11+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -502,7 +502,7 @@
 <li>第三方平台的小程序模板怎么上传？需要审核么？？</li>
 <li>这个全网发布什么鬼？也要审核？？？</li>
 </ul>
-<p>小程序审核发布什么的我基本想得通，像在应用分发平台(各应用市场)上传App一样的道理，，但这个『全网发布』有点太抽象了，，领导问起来，我也有点心虚，只能硬着头皮一点点试。好在领导给力，说 大不了微信不给审核通过，我们再按着未通过理由改呗。其实也看了<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318611&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">全网发布接入检测说明</a>，要检查一些文档中的接口是否可用。但是总有一层很模糊的东西没想明白，，Why？后来全网发布检测，一遍过，，<br><img src="http://ww1.sinaimg.cn/large/71fd377dly1fvm8kqdnnaj227d18nqd7.jpg" alt="微信第三方平台全网发布检测">(因为最初是为了发布小程序，所以小程序的接口全部实现了，公众号的接口没怎么做，，因此有两项测试失败，但还是提示检测通过了。)</p>
+<p>小程序审核发布什么的我基本想得通，像在应用分发平台(各应用市场)上传App一样的道理，，但这个『全网发布』有点太抽象了，，领导问起来，我也有点心虚，只能硬着头皮一点点试。好在领导给力，说 大不了微信不给审核通过，我们再按着未通过理由改呗。其实也看了<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318611&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">全网发布接入检测说明</a>，要检查一些文档中的接口是否可用。但是总有一层很模糊的东西没想明白，，Why？后来全网发布检测，一遍过，，<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901133656-微信第三方平台全网发布检测.jpg" alt="微信第三方平台全网发布检测">(因为最初是为了发布小程序，所以小程序的接口全部实现了，公众号的接口没怎么做，，因此有两项测试失败，但还是提示检测通过了。)</p>
 <p>然后检测通过后，就是等待微信审核(大概两个工作日)。这个时候还是不太确定全网发布是什么鬼，，直到审核通过。审核通过之后，，在上图中原『全网发布』按钮所在的那个 section(就是灰背景色那部分，，不知道怎么形容。。) 中灰字部分，会变成『全网发布的审核已通过，已允许公众号来进行授权托管。』。看到这行小字的时候好像突然明白了，，原来全网发布监测是为了保证基本服务可用(因为access_token获取方式变了，其他接口绝大部分需要通过传递access_token来实现业务)。检测通过之后，就可以面向所有客户(在测试阶段只测试白名单中应用可以使用第三方平台的接口实现业务)。</p>
 <p>其实，在<a href="https://open.weixin.qq.com/cgi-bin/showdocument?action=dir_list&amp;t=resource/res_list&amp;verify=1&amp;id=open1419318292&amp;token=43d90291769311af7af9b34c6c7b93ef600525b7&amp;lang=zh_CN" target="_blank" rel="noopener">第三方平台概述</a>中，已经提到了，，只不过最开始开发的时候，不明所以，就略过了，，</p>
 <blockquote>
@@ -681,7 +681,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -983,7 +983,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 

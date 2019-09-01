@@ -103,14 +103,14 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="JavaScript：彻底理解同步、异步和事件循环(Event Loop)为什么JavaScript是单线程？JavaScript语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。那么，为什么JavaScript不能有多个线程呢？ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm5mhjda5aj20g50boq3q.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm7ipda7a1j20i10a174m.jpg">
-<meta property="og:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm5moppkm8j20gp0endg6.jpg">
-<meta property="og:updated_time" content="2017-12-10T11:30:28.352Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-js%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97.jpg">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-event-loop.png">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-eventLoop.png">
+<meta property="og:updated_time" content="2019-09-01T05:45:24.604Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="彻底理解JavaScript同步|异步|事件循环(EventLoop)">
 <meta name="twitter:description" content="JavaScript：彻底理解同步、异步和事件循环(Event Loop)为什么JavaScript是单线程？JavaScript语言的一大特点就是单线程，也就是说，同一个时间只能做一件事。那么，为什么JavaScript不能有多个线程呢？ JavaScript的单线程，与它的用途有关。作为浏览器脚本语言，JavaScript的主要用途是与用户互动，以及操作DOM。这决定了它只能是单线程，否则会带">
-<meta name="twitter:image" content="http://ww1.sinaimg.cn/large/71fd377dgy1fm5mhjda5aj20g50boq3q.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-js%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97.jpg">
 
 
 
@@ -380,8 +380,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2017-12-10T19:30:28+08:00">
-                2017-12-10
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:45:24+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -560,7 +560,7 @@
 <li>所有同步任务都在主线程上执行，形成一个执行栈（execution context stack）。</li>
 <li>主线程之外，还存在一个“任务队列”（task queue）。只要异步任务有了运行结果，就在”任务队列”之中放置一个事件。</li>
 <li>一旦“执行栈”中的所有同步任务执行完毕，系统就会读取“任务队列”，看看里面有哪些事件。那些对应的异步任务，于是结束等待状态，进入执行栈，开始执行。</li>
-<li>主线程不断重复上面的第三步。<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fm5mhjda5aj20g50boq3q.jpg" alt="processEvent&amp;eventQueue"></li>
+<li>主线程不断重复上面的第三步。<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-js%E4%BB%BB%E5%8A%A1%E9%98%9F%E5%88%97.jpg" alt="processEvent&amp;eventQueue"></li>
 </ol>
 <h5 id="执行至完成"><a href="#执行至完成" class="headerlink" title="执行至完成"></a>执行至完成</h5><p>每一个消息完整的执行后，其它消息才会被执行。当你分析你的程序时，这点提供了一些优秀的特性，包括每当一个函数运行时，该函数占用的(线程)资源不能被抢占，并且在其他代码运行之前完全运行（且可以修改此函数操作的数据）。这与C语言不同，例如，如果函数在线程中运行，则可以在任何位置终止然后在另一个线程中运行其他代码。<br>　<br>这个模型的一个缺点在于当一个消息需要太长时间才能完成，Web应用无法处理用户的交互，例如点击或滚动。一个很好的做法是使消息处理缩短，如果可能，将一个消息裁剪成几个消息。</p>
 <h4 id="添加消息"><a href="#添加消息" class="headerlink" title="添加消息"></a>添加消息</h4><p>在浏览器里，当一个事件出现且该对象(<code>this</code>)绑定了事件监听器，消息可能随时被添加。如果没有事件监听器，事件该会丢失。所以点击一个附带点击事件处理函数的元素会添加一个消息。其它事件亦然。</p>
@@ -578,21 +578,18 @@
 </blockquote>
 <p>再次以异步AJAX为例，假设存在如下的代码：<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(<span class="string">'http://segmentfault.com'</span>, <span class="function"><span class="keyword">function</span>(<span class="params">resp</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'我是响应：'</span>, resp);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 其他代码</span></span><br><span class="line">...</span><br><span class="line">...</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
 <p>主线程在发起AJAX请求后，会继续执行其他代码。AJAX线程负责请求segmentfault.com，拿到响应后，它会把响应封装成一个JavaScript对象，然后构造一条消息：<br><figure class="highlight actionscript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 消息队列中的消息就长这个样子</span></span><br><span class="line"><span class="keyword">var</span> message = <span class="function"><span class="keyword">function</span> <span class="params">()</span> </span>&#123;</span><br><span class="line">    callbackFn(response);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>其中的<code>callbackFn</code>就是前面代码中得到成功响应时的回调函数。<br>　<br>主线程在执行完当前循环中的所有代码后，就会到消息队列取出这条消息(也就是message函数)，并执行它。到此为止，就完成了工作线程对主线程的通知，回调函数也就得到了执行。如果一开始主线程就没有提供回调函数，AJAX线程在收到HTTP响应后，也就没必要通知主线程，从而也没必要往消息队列放消息。如图👇<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fm7ipda7a1j20i10a174m.jpg" alt="event-loop"></p>
-<p>主线程从任务队列中读取事件，这个过程是循环不断的，所以整个的这种运行机制又称为Event Loop（事件循环）。<br>为了更好地理解Event Loop，请看下图（转引自Philip Roberts的演讲<a href="http://vimeo.com/96425312" target="_blank" rel="noopener">《Help, I’m stuck in an event-loop》</a>）。<br><img src="http://ww1.sinaimg.cn/large/71fd377dgy1fm5moppkm8j20gp0endg6.jpg" alt="eventLoop"><br>上图中，主线程运行的时候，产生堆（heap）和栈（stack），栈中的代码调用各种外部API，它们在”任务队列”中加入各种事件（click，load，done）。只要栈中的代码执行完毕，主线程就会去读取任务队列，依次执行那些事件所对应的回调函数。</p>
-<p>　</p>
+<p>其中的<code>callbackFn</code>就是前面代码中得到成功响应时的回调函数。<br>　<br>主线程在执行完当前循环中的所有代码后，就会到消息队列取出这条消息(也就是message函数)，并执行它。到此为止，就完成了工作线程对主线程的通知，回调函数也就得到了执行。如果一开始主线程就没有提供回调函数，AJAX线程在收到HTTP响应后，也就没必要通知主线程，从而也没必要往消息队列放消息。如图👇<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-event-loop.png" alt="event-loop"></p>
+<p>主线程从任务队列中读取事件，这个过程是循环不断的，所以整个的这种运行机制又称为Event Loop（事件循环）。<br>为了更好地理解Event Loop，请看下图（转引自Philip Roberts的演讲<a href="http://vimeo.com/96425312" target="_blank" rel="noopener">《Help, I’m stuck in an event-loop》</a>）。<br><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131839-eventLoop.png" alt="eventLoop"><br>上图中，主线程运行的时候，产生堆（heap）和栈（stack），栈中的代码调用各种外部API，它们在”任务队列”中加入各种事件（click，load，done）。只要栈中的代码执行完毕，主线程就会去读取任务队列，依次执行那些事件所对应的回调函数。</p>
 <h4 id="永不阻塞"><a href="#永不阻塞" class="headerlink" title="永不阻塞"></a>永不阻塞</h4><p>事件循环模型的一个非常有趣的特性是 JavaScript，与许多其他语言不同，它永不阻塞。 处理 I/O 通常通过事件和回调来执行，所以当一个应用正等待IndexedDB查询返回或者一个 XHR 请求返回时，它仍然可以处理其它事情，如用户输入。<br>　Rime<br>例外是存在的，如 alert或者同步 XHR，但应该尽量避免使用它们。注意，<a href="https://stackoverflow.com/questions/2734025/is-javascript-guaranteed-to-be-single-threaded/2734311#2734311" target="_blank" rel="noopener">例外的例外也是存在的</a>（但通常是实现错误而非其它原因）。</p>
 <hr>
 <p>文章引自：</p>
 <ol>
 <li><a href="https://segmentfault.com/a/1190000004322358" target="_blank" rel="noopener">https://segmentfault.com/a/1190000004322358</a></li>
 <li><a href="http://www.ruanyifeng.com/blog/2014/10/event-loop.html" target="_blank" rel="noopener">http://www.ruanyifeng.com/blog/2014/10/event-loop.html</a></li>
-<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop</a>
-　
-　
-　
-　</li>
+<li><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop" target="_blank" rel="noopener">https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/EventLoop</a></li>
 </ol>
+<p>　
+　</p>
 
       
     </div>
@@ -759,7 +756,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1061,7 +1058,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 

@@ -103,14 +103,14 @@
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="节选自 王宝令-Java变法编程实战，欢迎大家订阅~ 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mkwqbix2j20vq0ju797.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5ml1a6vpmj20vq0l9di7.jpg">
-<meta property="og:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mmt3dm8ij20vq0ju0un.jpg">
-<meta property="og:updated_time" content="2019-08-25T12:01:50.455Z">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131636-%E7%AE%A1%E7%A8%8B%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8C%96%E8%AF%AD%E4%B9%89.png">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131637-MESA%E7%AE%A1%E7%A8%8B%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131637-java%E4%B8%AD%E7%9A%84%E7%AE%A1%E7%A8%8B%E7%A4%BA%E6%84%8F%E5%9B%BE.png">
+<meta property="og:updated_time" content="2019-09-01T05:25:43.330Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="管程：并发编程的万能钥匙">
 <meta name="twitter:description" content="节选自 王宝令-Java变法编程实战，欢迎大家订阅~ 什么是管程不知道你是否曾经思考过这个问题：为什么 Java 在 1.5 之前仅仅提供了 synchronized 关键字及 wait()、notify()、notifyAll() 这三个看似从天而降的方法？在刚刚接触 Java 的时候，我以为它会提供新濠梁这种编程原语，因为操作系统原理课程告诉我，用信号量能解决所有并发问题，结果我发现不是。后来">
-<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/71fd377dgy1g5mkwqbix2j20vq0ju797.jpg">
+<meta name="twitter:image" content="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131636-%E7%AE%A1%E7%A8%8B%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8C%96%E8%AF%AD%E4%B9%89.png">
 
 
 
@@ -380,8 +380,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2019-08-25T20:01:50+08:00">
-                2019-08-25
+              <time title="更新于" itemprop="dateModified" datetime="2019-09-01T13:25:43+08:00">
+                2019-09-01
               </time>
             
           </span>
@@ -489,10 +489,10 @@
 <p>在并发编程领域，有两大核心问题：一个是<strong>互斥，即同一时刻只允许一个线程访问共享资源</strong>；另一个是<strong>同步，即线程之间如何通信、协作</strong>。这两大问题，管程都是能购解决的。</p>
 <p>我们先来看看管程是如何解决互斥问题的。</p>
 <p><strong>管程解决互斥问题的思路很简单，就是将共享变量及其对共享变量的操作统一封装起来</strong>。在下图中，<code>管程 X</code> 将共享变量 <code>queue</code> 这个队列和相关的操作入队 <code>enq()</code>、出队 <code>deq()</code> 都封转起来了；<code>线程 A</code> 和<code>线程 B</code> 如果想访问共享变量 <code>queue</code>，只能通过调用管程提供的 <code>enq()</code> 、<code>deq()</code> 方法来实现；<code>enq()</code> 、<code>deq()</code> 保证互斥性，只允许一个线程进入管程。不知你与没有发现，<strong>管程模型和面向对象是高度契合的</strong>。估计这也是 Java 选择管程的原因吧。</p>
-<p><img src="https://ws1.sinaimg.cn/large/71fd377dgy1g5mkwqbix2j20vq0ju797.jpg" alt="管程模型的代码化语义"></p>
+<p><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131636-%E7%AE%A1%E7%A8%8B%E6%A8%A1%E5%9E%8B%E7%9A%84%E4%BB%A3%E7%A0%81%E5%8C%96%E8%AF%AD%E4%B9%89.png" alt="管程模型的代码化语义"></p>
 <p>那管程是如何解决线程间的同步问题呢？</p>
 <p>这个就比较复杂了，不过你可以借鉴一下我们曾经提到过的就已流程，它可以帮你快速地理解这个问题。为进一步便于你理解，在下面👇，我展示了一副 MESA 的管程模型示意图，它详细的描述了 MESA 模型的主要组成部分。</p>
-<p><img src="https://ws1.sinaimg.cn/large/71fd377dgy1g5ml1a6vpmj20vq0l9di7.jpg" alt="MESA管程模型"></p>
+<p><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131637-MESA%E7%AE%A1%E7%A8%8B%E6%A8%A1%E5%9E%8B.png" alt="MESA管程模型"></p>
 <p>在管程模型里，共享变量和对共享变量的操作是被封装起来的，👆图中最外层的框就代表封装的意思。框的上面只有一个入口，并且在入口旁边还有一个入口等待队列。当多个线程同时进入管程内部时，只允许一个线程进入，其他线程则在入口等待队列中等待。这个过程类似就医流程的分诊，只允许一个患者就诊，其他患者在门口等待。</p>
 <p>管程里还引入了条件变量的概念，而且<strong>每个条件变量都对应有一个等待队列</strong>，条件变量 A 和条件变量 B 分别都有自己的等待队列。<strong>条件变量和等待队列的作用其实就是解决线程同步问题</strong>。你也可以结合上面提到的入队出队例子加深一下理解。</p>
 <p>假设有个<code>线程 T1</code> 执行出队操作，不过需要注意的是执行出队操作，有个前提条件，就是队列不能是空的，而队列不为空这个前提条件就是管程的条件变量。如果<code>线程 T1</code>进入管程后恰好发现队列是空的，那就只能去“队列不为空”这个条件变量队列里等待了。这个过程类似大夫给你开了单子让你去验血，你就去验血窗口排队去了。<code>线程 T1</code> 进入条件变量的等待队列后，是允许其他线程进入管程的。这个你去验血的时候，医生可以给其他患者诊治，道理是一样的。</p>
@@ -526,7 +526,7 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 省略入队操作...</span></span><br><span class="line"><span class="comment">// 入队后，通知可出队</span></span><br><span class="line">notEmpty.signal();</span><br></pre></td></tr></table></figure>
 <p>同时也满足第三条，只需要唤醒一个线程。所以上面👆阻塞队列的代码，使用 signal() 是可以的。</p>
 <h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><p>Java 参考了 MESA 模型，语言内置的管程(<code>synchronized</code>)对 MESA 模型进行了精简。MESA 模型中，条件变量可以有多个，Java 语言内置的管程里只有一个条件变量。具体如下图👇所示。</p>
-<p><img src="https://ws1.sinaimg.cn/large/71fd377dgy1g5mmt3dm8ij20vq0ju0un.jpg" alt="Java 中的管程示意图"></p>
+<p><img src="https://someoneiscoding-gallery-1257225696.cos.ap-guangzhou.myqcloud.com/blog/20190901131637-java%E4%B8%AD%E7%9A%84%E7%AE%A1%E7%A8%8B%E7%A4%BA%E6%84%8F%E5%9B%BE.png" alt="Java 中的管程示意图"></p>
 <p>Java 内置的管程方法(<code>synchronized</code>)使用简单，<strong><code>synchronized</code>关键字修饰的代码块，在编译期会自动生成相关加锁和解锁的代码，但是仅支持一个条件变量；而 Java SDK 并发包实现的管程支持多个条件变量，不过并发包里的锁，需要开发者自己进行加锁和解锁操作</strong>。</p>
 <p>并发编程里两大核心问题—互斥和同步，都可以由管程来帮你解决。学好管程，理论上所有的并发问题都可以解决，并且很多并发工具类的底层都是管程实现的，所以学好管程，就相当于掌握了一把并发编程的钥匙。</p>
 <h4 id="课后思考"><a href="#课后思考" class="headerlink" title="课后思考"></a>课后思考</h4><ol>
@@ -623,6 +623,10 @@
 
           <div class="post-nav-prev post-nav-item">
             
+              <a href="/2019/08/31/Fate&FreeWill/" rel="prev" title="人生的意义与自由意志">
+                人生的意义与自由意志 <i class="fa fa-chevron-right"></i>
+              </a>
+            
           </div>
         </div>
       
@@ -707,7 +711,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">53</span>
+                  <span class="site-state-item-count">54</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1009,7 +1013,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">104.2k</span>
+    <span title="Site words total count">105.2k</span>
   
 </div>
 
