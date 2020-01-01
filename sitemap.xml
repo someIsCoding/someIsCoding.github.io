@@ -4,7 +4,7 @@
 
     <sitemap>
         <loc>http://www.someoneiscoding.com/post-sitemap.xml</loc>
-        <lastmod>2020-01-01T15:30:07.394Z</lastmod>
+        <lastmod>2020-01-01T15:37:16.923Z</lastmod>
     </sitemap>
 
     <sitemap>
@@ -14,12 +14,12 @@
 
     <sitemap>
         <loc>http://www.someoneiscoding.com/category-sitemap.xml</loc>
-        <lastmod>2020-01-01T15:30:07.394Z</lastmod>
+        <lastmod>2020-01-01T15:37:16.923Z</lastmod>
     </sitemap>
 
     <sitemap>
         <loc>http://www.someoneiscoding.com/tag-sitemap.xml</loc>
-        <lastmod>2020-01-01T15:30:07.394Z</lastmod>
+        <lastmod>2020-01-01T15:37:16.923Z</lastmod>
     </sitemap>
 
 </sitemapindex>
