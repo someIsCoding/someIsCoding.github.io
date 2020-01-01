@@ -8,6 +8,13 @@
     </url>
 
     <url>
+        <loc>http://www.someoneiscoding.com/categories/ProustQA/</loc>
+        <lastmod>2020-01-01T15:30:07.394Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.4</priority>
+    </url>
+
+    <url>
         <loc>http://www.someoneiscoding.com/categories/%E5%91%93%E8%AF%AD/</loc>
         <lastmod>2019-09-01T06:05:27.809Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -31,13 +38,6 @@
     <url>
         <loc>http://www.someoneiscoding.com/categories/Quote/</loc>
         <lastmod>2019-07-16T14:37:33.503Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.4</priority>
-    </url>
-
-    <url>
-        <loc>http://www.someoneiscoding.com/categories/ProustQA/</loc>
-        <lastmod>2018-12-31T11:51:34.280Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.4</priority>
     </url>
