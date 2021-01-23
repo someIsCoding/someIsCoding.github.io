@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Keyboard-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Keyboard-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/Keyboard-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/Keyboard.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Mysql,数据库,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="SQL逻辑查询语句执行顺序 转载自 SQL逻辑查询语句执行顺序 - by 果冻想  测试表结构：👇12345678910111213CREATE TABLE table1 (     customer_id VARCHAR(10) NOT NULL,     city VARCHAR(10) NOT NULL,     PRIMARY KEY(customer_id) )ENGINE=INNOD">
+<meta name="keywords" content="Mysql,数据库">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SQL逻辑查询语句执行顺序">
+<meta property="og:url" content="https://www.someoneiscoding.com/2017/12/19/execution_sequence_of_sql/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="SQL逻辑查询语句执行顺序 转载自 SQL逻辑查询语句执行顺序 - by 果冻想  测试表结构：👇12345678910111213CREATE TABLE table1 (     customer_id VARCHAR(10) NOT NULL,     city VARCHAR(10) NOT NULL,     PRIMARY KEY(customer_id) )ENGINE=INNOD">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-09T08:52:38.759Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="SQL逻辑查询语句执行顺序">
+<meta name="twitter:description" content="SQL逻辑查询语句执行顺序 转载自 SQL逻辑查询语句执行顺序 - by 果冻想  测试表结构：👇12345678910111213CREATE TABLE table1 (     customer_id VARCHAR(10) NOT NULL,     city VARCHAR(10) NOT NULL,     PRIMARY KEY(customer_id) )ENGINE=INNOD">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.someoneiscoding.com/2017/12/19/execution_sequence_of_sql/">
+
+
+
+
+
+  <title>SQL逻辑查询语句执行顺序 | 程序员的自我修养</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '[object Object]', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8cde3514bfbe2b3535033e604f0bb850";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员的自我修养</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.someoneiscoding.com/2017/12/19/execution_sequence_of_sql/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小哪吒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">SQL逻辑查询语句执行顺序</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-12-19T22:35:24+08:00">
+                2017-12-19
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-05-09T16:52:38+08:00">
+                2018-05-09
+              </time>
+            
+          </span>
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java后时代/" itemprop="url" rel="index">
+                    <span itemprop="name">Java后时代</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/12/19/execution_sequence_of_sql/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2017/12/19/execution_sequence_of_sql/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,425
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  11
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="SQL逻辑查询语句执行顺序"><a href="#SQL逻辑查询语句执行顺序" class="headerlink" title="SQL逻辑查询语句执行顺序"></a>SQL逻辑查询语句执行顺序</h3><blockquote>
+<p>转载自 <a href="http://www.jellythink.com/archives/924" target="_blank" rel="noopener">SQL逻辑查询语句执行顺序</a> - by 果冻想</p>
+</blockquote>
+<p>测试表结构：👇<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE table1</span><br><span class="line"> (</span><br><span class="line">     customer_id VARCHAR(10) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     city VARCHAR(10) <span class="keyword">NOT</span> <span class="literal">NULL</span>,</span><br><span class="line">     PRIMARY KEY(customer_id)</span><br><span class="line"> )<span class="attribute">ENGINE</span>=INNODB<span class="built_in"> DEFAULT </span><span class="attribute">CHARSET</span>=UTF8;</span><br><span class="line"></span><br><span class="line"> CREATE TABLE table2</span><br><span class="line"> (</span><br><span class="line">     order_id INT <span class="keyword">NOT</span> <span class="literal">NULL</span> auto_increment,</span><br><span class="line">     customer_id VARCHAR(10),</span><br><span class="line">     PRIMARY KEY(order_id)</span><br><span class="line"> )<span class="attribute">ENGINE</span>=INNODB<span class="built_in"> DEFAULT </span><span class="attribute">CHARSET</span>=UTF8;</span><br></pre></td></tr></table></figure></p>
+<p>测试数据：👇<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> table1(customer_id,city) <span class="keyword">VALUES</span>(<span class="string">'163'</span>,<span class="string">'hangzhou'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table1(customer_id,city) <span class="keyword">VALUES</span>(<span class="string">'9you'</span>,<span class="string">'shanghai'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table1(customer_id,city) <span class="keyword">VALUES</span>(<span class="string">'tx'</span>,<span class="string">'hangzhou'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table1(customer_id,city) <span class="keyword">VALUES</span>(<span class="string">'baidu'</span>,<span class="string">'hangzhou'</span>);</span><br><span class="line"></span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'163'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'163'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'9you'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'9you'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'9you'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="string">'tx'</span>);</span><br><span class="line"> <span class="keyword">INSERT</span> <span class="keyword">INTO</span> table2(customer_id) <span class="keyword">VALUES</span>(<span class="literal">NULL</span>);</span><br></pre></td></tr></table></figure></p>
+<p>SQL逻辑查询测试语句👇<br><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">#使用上述SQL查询语句来获得来自杭州，并且订单数少于2的客户。</span><br><span class="line"><span class="keyword">SELECT</span> a.customer_id, <span class="built_in">COUNT</span>(b.order_id) <span class="keyword">as</span> total_orders</span><br><span class="line"> <span class="keyword">FROM</span> table1 <span class="keyword">AS</span> a</span><br><span class="line"> <span class="keyword">LEFT</span> <span class="keyword">JOIN</span> table2 <span class="keyword">AS</span> b</span><br><span class="line"> <span class="keyword">ON</span> a.customer_id = b.customer_id</span><br><span class="line"> <span class="keyword">WHERE</span> a.city = <span class="string">'hangzhou'</span></span><br><span class="line"> <span class="keyword">GROUP</span> <span class="keyword">BY</span> a.customer_id</span><br><span class="line"> <span class="keyword">HAVING</span> <span class="built_in">count</span>(b.order_id) &lt; <span class="number">2</span></span><br><span class="line"> <span class="keyword">ORDER</span> <span class="keyword">BY</span> total_orders <span class="keyword">DESC</span>;</span><br></pre></td></tr></table></figure></p>
+<h4 id="SQL逻辑查询语句执行顺序-1"><a href="#SQL逻辑查询语句执行顺序-1" class="headerlink" title="SQL逻辑查询语句执行顺序"></a>SQL逻辑查询语句执行顺序</h4><figure class="highlight n1ql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">(7)     <span class="keyword">SELECT</span> </span><br><span class="line">(<span class="number">8</span>)     <span class="keyword">DISTINCT</span> &lt;select_list&gt;</span><br><span class="line">(<span class="number">1</span>)     <span class="keyword">FROM</span> &lt;left_table&gt;</span><br><span class="line">(<span class="number">3</span>)     &lt;join_type&gt; <span class="keyword">JOIN</span> &lt;right_table&gt;</span><br><span class="line">(<span class="number">2</span>)     <span class="keyword">ON</span> &lt;join_condition&gt;</span><br><span class="line">(<span class="number">4</span>)     <span class="keyword">WHERE</span> &lt;where_condition&gt;</span><br><span class="line">(<span class="number">5</span>)     <span class="keyword">GROUP</span> <span class="keyword">BY</span> &lt;group_by_list&gt;</span><br><span class="line">(<span class="number">6</span>)     <span class="keyword">HAVING</span> &lt;having_condition&gt;</span><br><span class="line">(<span class="number">9</span>)     <span class="keyword">ORDER</span> <span class="keyword">BY</span> &lt;order_by_condition&gt;</span><br><span class="line">(<span class="number">10</span>)    <span class="keyword">LIMIT</span> &lt;limit_number&gt;</span><br></pre></td></tr></table></figure>
+<p>👆上面在每条语句的前面都标明了执行顺序号，不要问我怎么知道这个顺序的。我也是读各种“武林秘籍”才得知的，如果你有功夫，去阅读一下MySQL的源码，也会得出这个结果的。</p>
+<p>好了，上面我标出了各条查询规则的执行先后顺序，那么各条查询语句是如何执行的呢？这就是我今天这篇博文的重点内容。Go on…</p>
+<h4 id="执行FROM语句"><a href="#执行FROM语句" class="headerlink" title="执行FROM语句"></a>执行<code>FROM</code>语句</h4><p>在这些SQL语句的执行过程中，都会产生一个虚拟表，用来保存SQL语句的执行结果（这是重点），我现在就来跟踪这个虚拟表的变化，得到最终的查询结果的过程，来分析整个SQL逻辑查询的执行顺序和过程。</p>
+<p>第一步，执行<code>FROM</code>语句。我们首先需要知道最开始从哪个表开始的，这就是<code>FROM</code>告诉我们的。现在有了<code>&lt;left_table&gt;</code>和<code>&lt;right_table&gt;</code>两个表，我们到底从哪个表开始，还是从两个表进行某种联系以后再开始呢？它们之间如何产生联系呢？——笛卡尔积</p>
+<p>关于什么是笛卡尔积，请自行Google补脑。经过<code>FROM</code>语句对两个表执行笛卡尔积，会得到一个虚拟表，暂且叫VT1（vitual table 1），内容如下：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>总共有28（<code>table1</code>的记录条数 * <code>table2</code>的记录条数）条记录。这就是VT1👆的结果，接下来的操作就在VT1👆的基础上进行。</p>
+<h4 id="执行ON过滤"><a href="#执行ON过滤" class="headerlink" title="执行ON过滤"></a>执行<code>ON</code>过滤</h4><p>执行完笛卡尔积以后，接着就进行<code>ON a.customer_id = b.customer_id</code>条件过滤，根据<code>ON</code>中指定的条件，去掉那些不符合条件的数据，得到VT2表👇，内容如下：<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>👆VT2就是经过<code>ON</code>条件筛选以后得到的有用数据，而接下来的操作将在VT2👆的基础上继续进行。</p>
+<h4 id="添加外部行"><a href="#添加外部行" class="headerlink" title="添加外部行"></a>添加外部行</h4><p>这一步只有在连接类型为<code>OUTER JOIN</code>时才发生，如<code>LEFT OUTER JOIN</code>、<code>RIGHT OUTER JOIN</code>和<code>FULL OUTER JOIN</code>。在大多数的时候，我们都是会省略掉<code>OUTER</code>关键字的，但<code>OUTER</code>表示的就是外部行的概念。</p>
+<p><code>LEFT OUTER JOIN</code>把左表记为保留表，得到的结果为：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">     NULL </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p><code>RIGHT OUTER JOIN</code>把右表记为保留表，得到的结果为：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> NULL        </span>|<span class="string"> NULL     </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p><code>FULL OUTER JOIN</code>把左右表都作为保留表，得到的结果为：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">     NULL </span>|<span class="string"> NULL        </span>|</span><br><span class="line">|<span class="string"> NULL        </span>|<span class="string"> NULL     </span>|<span class="string">        7 </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>添加外部行的工作就是在VT2表的基础上添加保留表中被过滤条件过滤掉的数据，非保留表中的数据被赋予NULL值，最后生成虚拟表VT3。</p>
+<p>由于我在准备的测试SQL查询逻辑语句中使用的是<code>LEFT JOIN</code>，过滤掉了以下这条数据：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">     NULL </span>|<span class="string"> NULL        </span>|</span><br></pre></td></tr></table></figure></p>
+<p>现在就把这条数据添加到VT2表中，得到的VT3表如下：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        3 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        4 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> 9you        </span>|<span class="string"> shanghai </span>|<span class="string">        5 </span>|<span class="string"> 9you        </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">     NULL </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>接下来的操作都会在该VT3表上进行。</p>
+<h4 id="执行WHERE过滤"><a href="#执行WHERE过滤" class="headerlink" title="执行WHERE过滤"></a>执行<code>WHERE</code>过滤</h4><p>对添加外部行得到的VT3进行<code>WHERE</code>过滤，只有符合<code>&lt;where_condition&gt;</code>的记录才会输出到虚拟表VT4中。当我们执行<code>WHERE a.city = &#39;hangzhou&#39;</code>的时候，就会得到以下内容，并存在虚拟表VT4中：👇<br><figure class="highlight gherkin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> customer_id </span>|<span class="string"> city     </span>|<span class="string"> order_id </span>|<span class="string"> customer_id </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        1 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> 163         </span>|<span class="string"> hangzhou </span>|<span class="string">        2 </span>|<span class="string"> 163         </span>|</span><br><span class="line">|<span class="string"> tx          </span>|<span class="string"> hangzhou </span>|<span class="string">        6 </span>|<span class="string"> tx          </span>|</span><br><span class="line">|<span class="string"> baidu       </span>|<span class="string"> hangzhou </span>|<span class="string">     NULL </span>|<span class="string"> NULL        </span>|</span><br><span class="line">+-------------+----------+----------+-------------+</span><br></pre></td></tr></table></figure></p>
+<p>但是在使用WHERE子句时，需要注意以下两点：</p>
+<ol>
+<li>由于数据还没有分组，因此现在还不能在<code>WHERE</code>过滤器中使用<code>where_condition=MIN(col)</code>这类对分组统计的过滤；</li>
+<li>由于还没有进行列的选取操作，因此在<code>SELECT</code>中使用列的别名也是不被允许的，如：<code>SELECT city as c FROM t WHERE c=&#39;shanghai&#39;;</code>是不允许出现的。</li>
+</ol>
+<h4 id="执行GROUP-BY分组"><a href="#执行GROUP-BY分组" class="headerlink" title="执行GROUP BY分组"></a>执行<code>GROUP BY</code>分组</h4><p><code>GROUP BY</code>子句主要是对使用<code>WHERE</code>子句得到的虚拟表进行分组操作。我们执行测试语句中的<code>GROUP BY a.customer_id</code>，就会得到以下内容：👇<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+-------------+</span>----------<span class="code">+----------+</span>-------------+</span><br><span class="line">| customer<span class="emphasis">_id | city     | order_</span>id | customer<span class="emphasis">_id |</span></span><br><span class="line"><span class="emphasis">+-------------+----------+----------+-------------+</span></span><br><span class="line"><span class="emphasis">| 163         | hangzhou |        1 | 163         |</span></span><br><span class="line"><span class="emphasis">| baidu       | hangzhou |     NULL | NULL        |</span></span><br><span class="line"><span class="emphasis">| tx          | hangzhou |        6 | tx          |</span></span><br><span class="line"><span class="emphasis">+-------------+----------+----------+-------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>得到的内容会存入虚拟表VT5👆中，此时，我们就得到了一个VT5👆虚拟表，接下来的操作都会在该表上完成。</p>
+<h4 id="执行HAVING过滤"><a href="#执行HAVING过滤" class="headerlink" title="执行HAVING过滤"></a>执行<code>HAVING</code>过滤</h4><p><code>HAVING</code>子句主要和<code>GROUP BY</code>子句配合使用，对分组得到的VT5虚拟表进行条件过滤。当我执行测试语句中的<code>HAVING count(b.order_id) &lt; 2</code>时，将得到以下内容：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+-------------+</span>----------<span class="code">+----------+</span>-------------+</span><br><span class="line">| customer<span class="emphasis">_id | city     | order_</span>id | customer<span class="emphasis">_id |</span></span><br><span class="line"><span class="emphasis">+-------------+----------+----------+-------------+</span></span><br><span class="line"><span class="emphasis">| baidu       | hangzhou |     NULL | NULL        |</span></span><br><span class="line"><span class="emphasis">| tx          | hangzhou |        6 | tx          |</span></span><br><span class="line"><span class="emphasis">+-------------+----------+----------+-------------+</span></span><br></pre></td></tr></table></figure></p>
+<p>👆这就是虚拟表VT6。</p>
+<h4 id="SELECT列表"><a href="#SELECT列表" class="headerlink" title="SELECT列表"></a><code>SELECT</code>列表</h4><p>现在才会执行到<code>SELECT</code>子句，不要以为<code>SELECT</code>子句被写在第一行，就是第一个被执行的。</p>
+<p>我们执行测试语句中的<code>SELECT a.customer_id, COUNT(b.order_id) as total_orders</code>，从虚拟表VT6中选择出我们需要的内容。我们将得到以下内容：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+-------------+</span>--------------+</span><br><span class="line">| customer<span class="emphasis">_id | total_</span>orders |</span><br><span class="line"><span class="code">+-------------+</span>--------------+</span><br><span class="line">| baidu       |            0 |</span><br><span class="line">| tx          |            1 |</span><br><span class="line"><span class="code">+-------------+</span>--------------+</span><br></pre></td></tr></table></figure></p>
+<p>不，还没有完，👆这只是虚拟表VT7。</p>
+<h4 id="执行DISTINCT子句"><a href="#执行DISTINCT子句" class="headerlink" title="执行DISTINCT子句"></a>执行<code>DISTINCT</code>子句</h4><p>如果在查询中指定了<code>DISTINCT</code>子句，则会创建一张内存临时表（如果内存放不下，就需要存放在硬盘了）。这张临时表的表结构和上一步产生的虚拟表VT7是一样的，不同的是对进行<code>DISTINCT</code>操作的列增加了一个唯一索引，以此来除重复数据。<br>由于我的测试SQL语句中并没有使用DISTINCT，所以，在该查询中，这一步不会生成一个虚拟表。</p>
+<h4 id="执行ORDER-BY子句"><a href="#执行ORDER-BY子句" class="headerlink" title="执行ORDER BY子句"></a>执行<code>ORDER BY</code>子句</h4><p>对虚拟表中的内容按照指定的列进行排序，然后返回一个新的虚拟表，我们执行测试SQL语句中的<code>ORDER BY total_orders DESC</code>，就会得到以下内容：<br><figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="code">+-------------+</span>--------------+</span><br><span class="line">| customer<span class="emphasis">_id | total_</span>orders |</span><br><span class="line"><span class="code">+-------------+</span>--------------+</span><br><span class="line">| tx          |            1 |</span><br><span class="line">| baidu       |            0 |</span><br><span class="line"><span class="code">+-------------+</span>--------------+</span><br></pre></td></tr></table></figure></p>
+<p>可以看到这是对<code>total_orders</code>列进行降序排列的。上述结果会存储在VT8👆中。</p>
+<h4 id="执行LIMIT子句"><a href="#执行LIMIT子句" class="headerlink" title="执行LIMIT子句"></a>执行<code>LIMIT</code>子句</h4><p><code>LIMIT</code>子句从上一步得到的VT8虚拟表中选出从指定位置开始的指定行数据。对于没有应用<code>ORDER BY</code>的<code>LIMIT</code>子句，得到的结果同样是无序的，所以，很多时候，我们都会看到<code>LIMIT</code>子句会和<code>ORDER BY</code>子句一起使用。</p>
+<p>MySQL数据库的LIMIT支持如下形式的选择：👇<br><figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIMIT <span class="built_in">n</span>, m</span><br></pre></td></tr></table></figure></p>
+<p>表示从第n条记录开始选择m条记录。而很多开发人员喜欢使用该语句来解决分页问题。对于小数据，使用LIMIT子句没有任何问题，当数据量非常大的时候，使用<code>LIMIT n, m</code>是非常低效的。因为LIMIT的机制是每次都是从头开始扫描，如果需要从第60万行开始，读取3条数据，就需要先扫描定位到60万行，然后再进行读取，而扫描的过程是一个非常低效的过程。所以，对于大数据处理时，是非常有必要在应用层建立一定的缓存机制（貌似现在的大数据处理，都有缓存哦）。各位，请期待我的缓存方面的文章哦。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小哪吒 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小哪吒 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Mysql/" rel="tag"><i class="fa fa-tag"></i> Mysql</a>
+          
+            <a href="/tags/数据库/" rel="tag"><i class="fa fa-tag"></i> 数据库</a>
+          
+        </div>
+      
+
+      <div>
+        
+          
+
+        
+      </div>
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/19/2017_12_week_3rd/" rel="next" title="2017_12-第三周">
+                <i class="fa fa-chevron-left"></i> 2017_12-第三周
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/12/19/exists-and-in_in_MySQL/" rel="prev" title="浅析MySQL中exists与in的使用">
+                浅析MySQL中exists与in的使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpeg" alt="小哪吒">
+            
+              <p class="site-author-name" itemprop="name">小哪吒</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="0">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="1">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="2">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="3">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="4">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href=":" target="_blank" title="5">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="6">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="7">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="8">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="9">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="10">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="11">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="12">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="13">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="14">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="15">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="u" target="_blank" title="16">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="17">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="c" target="_blank" title="18">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="19">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="m" target="_blank" title="20">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="21">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="22">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="23">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="24">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="25">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="l" target="_blank" title="26">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="27">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="28">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="29">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="30">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="31">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="32">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="33">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="34">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="35">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="36">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="37">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="38">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="n" target="_blank" title="39">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="g" target="_blank" title="40">
+                    </a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#SQL逻辑查询语句执行顺序"><span class="nav-number">1.</span> <span class="nav-text">SQL逻辑查询语句执行顺序</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#SQL逻辑查询语句执行顺序-1"><span class="nav-number">1.1.</span> <span class="nav-text">SQL逻辑查询语句执行顺序</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行FROM语句"><span class="nav-number">1.2.</span> <span class="nav-text">执行FROM语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行ON过滤"><span class="nav-number">1.3.</span> <span class="nav-text">执行ON过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#添加外部行"><span class="nav-number">1.4.</span> <span class="nav-text">添加外部行</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行WHERE过滤"><span class="nav-number">1.5.</span> <span class="nav-text">执行WHERE过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行GROUP-BY分组"><span class="nav-number">1.6.</span> <span class="nav-text">执行GROUP BY分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行HAVING过滤"><span class="nav-number">1.7.</span> <span class="nav-text">执行HAVING过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#SELECT列表"><span class="nav-number">1.8.</span> <span class="nav-text">SELECT列表</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行DISTINCT子句"><span class="nav-number">1.9.</span> <span class="nav-text">执行DISTINCT子句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行ORDER-BY子句"><span class="nav-number">1.10.</span> <span class="nav-text">执行ORDER BY子句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#执行LIMIT子句"><span class="nav-number">1.11.</span> <span class="nav-text">执行LIMIT子句</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+  <div class="footer-custom">备案：<span>冀ICP备18000816号</span></div>
+
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小哪吒</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">107.6k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://someoneiscoding.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.someoneiscoding.com/2017/12/19/execution_sequence_of_sql/';
+          this.page.identifier = '2017/12/19/execution_sequence_of_sql/';
+          this.page.title = 'SQL逻辑查询语句执行顺序';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://someoneiscoding.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+</body>
+</html>

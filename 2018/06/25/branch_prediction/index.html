@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+<script>
+    (function(){
+        if(''){
+            if (prompt('请输入文章密码') !== ''){
+                alert('密码错误！');
+                history.back();
+            }
+        }
+    })();
+</script>
+
+
+  
+  
+    
+    
+  <script src="/lib/pace/pace.min.js?v=1.0.2"></script>
+  <link href="/lib/pace/pace-theme-big-counter.min.css?v=1.0.2" rel="stylesheet">
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/Keyboard-touch-icon.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/Keyboard-32x32.png?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/Keyboard-16x16.png?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/Keyboard.svg?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="计算机系统,branch prediction,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="因为之前一直在关注『码农翻身』公众号，作者以很基础的文字构建关于计算机关于编程的小故事，由浅入深，，其中的知识点可以自己延伸阅读，还是非常不错的，很适合入门~后来，作者出书了，支持了一波，，毕竟纸质书翻起来比较方便。OK，进入正题，，在『CPU阿甘』中有提到『局部性原理』，，有必要延伸阅读下。网上找到了Stack Overflow中一篇文章-Why is it faster to process">
+<meta name="keywords" content="计算机系统,branch prediction">
+<meta property="og:type" content="article">
+<meta property="og:title" content="关于局部性原理">
+<meta property="og:url" content="https://www.someoneiscoding.com/2018/06/25/branch_prediction/index.html">
+<meta property="og:site_name" content="程序员的自我修养">
+<meta property="og:description" content="因为之前一直在关注『码农翻身』公众号，作者以很基础的文字构建关于计算机关于编程的小故事，由浅入深，，其中的知识点可以自己延伸阅读，还是非常不错的，很适合入门~后来，作者出书了，支持了一波，，毕竟纸质书翻起来比较方便。OK，进入正题，，在『CPU阿甘』中有提到『局部性原理』，，有必要延伸阅读下。网上找到了Stack Overflow中一篇文章-Why is it faster to process">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Entroncamento_do_Transpraia.JPG/1600px-Entroncamento_do_Transpraia.JPG">
+<meta property="og:image" content="https://i.stack.imgur.com/pyfwC.png">
+<meta property="og:updated_time" content="2018-06-25T17:03:27.650Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="关于局部性原理">
+<meta name="twitter:description" content="因为之前一直在关注『码农翻身』公众号，作者以很基础的文字构建关于计算机关于编程的小故事，由浅入深，，其中的知识点可以自己延伸阅读，还是非常不错的，很适合入门~后来，作者出书了，支持了一波，，毕竟纸质书翻起来比较方便。OK，进入正题，，在『CPU阿甘』中有提到『局部性原理』，，有必要延伸阅读下。网上找到了Stack Overflow中一篇文章-Why is it faster to process">
+<meta name="twitter:image" content="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Entroncamento_do_Transpraia.JPG/1600px-Entroncamento_do_Transpraia.JPG">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.3',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":true,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.someoneiscoding.com/2018/06/25/branch_prediction/">
+
+
+
+
+
+  <title>关于局部性原理 | 程序员的自我修养</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', '[object Object]', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?8cde3514bfbe2b3535033e604f0bb850";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">程序员的自我修养</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.someoneiscoding.com/2018/06/25/branch_prediction/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="小哪吒">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.jpeg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程序员的自我修养">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">关于局部性原理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-25T16:51:32+08:00">
+                2018-06-25
+              </time>
+            
+
+            
+              <span class="post-meta-divider">|</span>
+            
+            
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-check-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">更新于&#58;</span>
+              
+              <time title="更新于" itemprop="dateModified" datetime="2018-06-26T01:03:27+08:00">
+                2018-06-26
+              </time>
+            
+          </span>
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Java后时代/" itemprop="url" rel="index">
+                    <span itemprop="name">Java后时代</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/25/branch_prediction/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count disqus-comment-count" data-disqus-identifier="2018/06/25/branch_prediction/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+            <div class="post-wordcount">
+              
+                
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-file-word-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">字数统计&#58;</span>
+                
+                <span title="字数统计">
+                  2,221
+                </span>
+              
+
+              
+                <span class="post-meta-divider">|</span>
+              
+
+              
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-clock-o"></i>
+                </span>
+                
+                  <span class="post-meta-item-text">阅读时长 &asymp;</span>
+                
+                <span title="阅读时长">
+                  9
+                </span>
+              
+            </div>
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>因为之前一直在关注『<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513504&amp;idx=1&amp;sn=25dd6420e3056101dd3f6fdaedacaa2a&amp;chksm=80d67a63b7a1f37572a5159ff6f53810467c15c8beec94770e8360c45f45036360d77755ee78&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">码农翻身</a>』公众号，作者以很基础的文字构建关于计算机关于编程的小故事，由浅入深，，其中的知识点可以自己延伸阅读，还是非常不错的，很适合入门~后来，作者出书了，支持了一波，，毕竟纸质书翻起来比较方便。<br>OK，进入正题，，在『<a href="https://mp.weixin.qq.com/s?__biz=MzAxOTc0NzExNg==&amp;mid=2665513017&amp;idx=1&amp;sn=5550ee714abd36d0b580713f673e670b&amp;scene=21#wechat_redirect" target="_blank" rel="noopener">CPU阿甘</a>』中有提到『局部性原理』，，有必要延伸阅读下。网上找到了Stack Overflow中一篇文章-<a href="https://stackoverflow.com/questions/11227809/why-is-it-faster-to-process-a-sorted-array-than-an-unsorted-array" target="_blank" rel="noopener">Why is it faster to process a sorted array than an unsorted array?</a>-本文是对这篇文章的简单翻译，四级水平，还请多包涵 哈哈。</p>
+<hr>
+<h4 id="为什么排序后的数组比乱序的数组执行起来要快？"><a href="#为什么排序后的数组比乱序的数组执行起来要快？" class="headerlink" title="为什么排序后的数组比乱序的数组执行起来要快？"></a>为什么排序后的数组比乱序的数组执行起来要快？</h4><p>这是一段看起来非常奇怪的C++代码，因为某些原因，将数组排序之后奇迹般的将运行速度提高了将近六倍。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">// 生成数据(数组)</span></span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">unsigned</span> arraySize = <span class="number">32768</span>;</span><br><span class="line">    <span class="keyword">int</span> data[arraySize];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> c = <span class="number">0</span>; c &lt; arraySize; ++c)</span><br><span class="line">        data[c] = <span class="built_in">std</span>::rand() % <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// !!! 因为这一行代码，下边的循环运行的更快了</span></span><br><span class="line">    <span class="built_in">std</span>::sort(data, data + arraySize);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 测试</span></span><br><span class="line">    <span class="keyword">clock_t</span> start = clock();</span><br><span class="line">    <span class="keyword">long</span> <span class="keyword">long</span> sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">unsigned</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i)&#123;</span><br><span class="line">        <span class="comment">// Primary loop</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">unsigned</span> c = <span class="number">0</span>; c &lt; arraySize; ++c)&#123;</span><br><span class="line">            <span class="keyword">if</span> (data[c] &gt;= <span class="number">128</span>)</span><br><span class="line">                sum += data[c];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">double</span> elapsedTime = <span class="keyword">static_cast</span>&lt;<span class="keyword">double</span>&gt;(clock() - start) / CLOCKS_PER_SEC;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; elapsedTime &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"sum = "</span> &lt;&lt; sum &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果没有<code>std::sort(data, data + arraySize);</code>(即数组数据大小乱序), 代码运行11.54秒。</li>
+<li>数组元素排序之后，运行只用了1.93秒。</li>
+</ul>
+<p>起初，我以为这种现象与编程语言或者编译器什么的有关系，，所以，我把代码移植到Java中试了一下👇</p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Arrays;</span><br><span class="line"><span class="keyword">import</span> java.util.Random;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> void main(<span class="type">String</span>[] args)&#123;</span><br><span class="line">        <span class="comment">// Generate data</span></span><br><span class="line">        int arraySize = <span class="number">32768</span>;</span><br><span class="line">        int data[] = new int[arraySize];</span><br><span class="line"></span><br><span class="line">        <span class="type">Random</span> rnd = new <span class="type">Random</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">for</span> (int <span class="built_in">c</span> = <span class="number">0</span>; <span class="built_in">c</span> &lt; arraySize; ++<span class="built_in">c</span>)</span><br><span class="line">            data[<span class="built_in">c</span>] = rnd.nextInt() % <span class="number">256</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// !!! With this, the next loop runs faster</span></span><br><span class="line">        <span class="type">Arrays</span>.<span class="built_in">sort</span>(data);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Test</span></span><br><span class="line">        long start = <span class="type">System</span>.nanoTime();</span><br><span class="line">        long sum = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (int i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i)&#123;</span><br><span class="line">            <span class="comment">// Primary loop</span></span><br><span class="line">            <span class="keyword">for</span> (int <span class="built_in">c</span> = <span class="number">0</span>; <span class="built_in">c</span> &lt; arraySize; ++<span class="built_in">c</span>)&#123;</span><br><span class="line">                <span class="keyword">if</span> (data[<span class="built_in">c</span>] &gt;= <span class="number">128</span>)</span><br><span class="line">                    sum += data[<span class="built_in">c</span>];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="type">System</span>.out.<span class="built_in">println</span>((<span class="type">System</span>.nanoTime() - start) / <span class="number">1000000000.0</span>);</span><br><span class="line">        <span class="type">System</span>.out.<span class="built_in">println</span>(<span class="string">"sum = "</span> + sum);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果有点类似，但没有像在C++中差很多。</p>
+<p>我刚开始想到的是把数组排序之后，将数组载入到内存中了，，转念一想，这忒蠢了，数组明明是刚生成的(一直在内存中)。</p>
+<ul>
+<li>到底发生了神马？</li>
+<li>为什么排序后的数组比乱序时处理速度快很多？</li>
+<li>代码中求和项是相对独立的，应该跟数组数据没什么关系。。(存疑)</li>
+</ul>
+<hr>
+<h4 id="高票回答"><a href="#高票回答" class="headerlink" title="高票回答"></a>高票回答</h4><p><em>你可能是分支预测失败的受害者</em>。。</p>
+<p>那么什么是分支预测呢？？</p>
+<p>想象铁路的岔口，，👇<br><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/cf/Entroncamento_do_Transpraia.JPG/1600px-Entroncamento_do_Transpraia.JPG" alt="railroad junction"><br>@(Image by Mecanismo, via Wikimedia Commons. Used under the CC-By-SA 3.0 license.)</p>
+<p>现在为了方便讨论，假想我们回到了19世纪，那时候还无法进行远距离无线通讯。</p>
+<p>你作为这个岔路口的操作员，听到一辆货车正在驶来，但又完全不知道它想去哪条分支路线。这时，你示意货车停下来，问他你想去哪个方向，然后将开关设置为正确的位置。</p>
+<p><em>火车很笨重，因为惯性的原因，它们在启动和停下来的时候通常要花很长时间。</em></p>
+<p>有没有更好的办法嗫？(办法是)猜测它会去往哪个方向！</p>
+<ul>
+<li>如果你猜对了，它继续行驶~</li>
+<li>如果你猜错了，火车司机会向你大喊大叫，让你重置开关，，然后TA重新启动，驶向另一方向。</li>
+</ul>
+<p><strong>如果你每次都猜对</strong>，火车就永远不需要停下来~<br><strong>如果你总是都猜错</strong>，火车会花费很长时间停下来，后退，重新启动。。</p>
+<p><strong>把它看做一个 if 代码块</strong>：在芯片级别，这是一个分支指令👇<br><img src="https://i.stack.imgur.com/pyfwC.png" alt="if-statement"><br>作为一个处理器，你看到一个分支结构，，完全不知道它将要怎么运行？你怎么做？等判断条件先运行结束，然后根据正确的结果选择合适的分支运行。</p>
+<p><em>现代处理器(通常)很复杂，有很长的流水线级数。所以，会像火车一样话很长的时间『启动』和『刹车』。</em></p>
+<p>有没有更好的办法嗫？(答案是)猜测程序会运行哪个分支的代码。</p>
+<ul>
+<li>如果猜对了，程序继续执行~</li>
+<li>如果猜错了，需要清空流水线(的所有任务)，回滚到分支结构开始的位置。然后重新启动执行另一个分支。</li>
+</ul>
+<p><strong>如果每次都猜对</strong>，你永远不需要被迫停下~<br><strong>如果总是猜错</strong>，你会花费很长时间减速，回滚，重启。。</p>
+<p>这就是<strong>分支预测</strong>，，我承认这不是最好的比喻，因为火车可以用旗子作为指示方向的信号。但是在计算机中，处理器直到最后一刻才知道最终会运行哪个分支(的代码)。</p>
+<p>那么，你如何策略性地猜测，以尽量减少火车必须后退才能才能驶向正确的方向的次数？观察过去的执行历史！如果99%的情况，火车都向驶向左侧，那么你(肯定)猜测(下一次)火车(同样)驶向左侧。如果它(驶向左侧或者右侧的情况)交替出现，那么你(根据情况)交替改变你的猜测。如果每三次就会驶向某一特定的方向，那么你也会据此作出合理的猜测..</p>
+<p>换句话说，你试图抽象出一个模型并据此作出猜测。这或多或少是分支预测器的工作原理。</p>
+<p>大多数应用程序具有良好表现(well-behaved 具体指什么??)的分支。所以现代分支预测器通常会达到大于90％的命中率。但是当面对不可识别的模型时，我们无法预测将要执行的分支，这时分支预测器实际上是毫无用处的。</p>
+<p><strong>正如上边我们猜测的那样，罪魁祸首是这个if代码块</strong>👇</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">data</span>[c] &gt;= <span class="number">128</span>)</span><br><span class="line">    <span class="built_in">sum</span> += <span class="keyword">data</span>[c];</span><br></pre></td></tr></table></figure>
+<p>我们可以注意到，数据均匀分布在0和255之间。数组中的所有元素排序之后，大致前半部分元素迭代时不会进入if语句。剩下后半部分的元素，它们将全部进入if语句。</p>
+<p>分支连续多次走向相同的方向时，这对于分支预测器非常友好。即使是简单的饱和计数器也能正确预测分支，除了饱和后改变方向后的少数迭代。</p>
+<p><strong>快速预览</strong>：</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">T</span> = branch taken</span><br><span class="line"><span class="built_in">N</span> = branch <span class="built_in">not</span> taken</span><br><span class="line"></span><br><span class="line">data[] = <span class="number">0</span>, <span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, ... <span class="number">126</span>, <span class="number">127</span>, <span class="number">128</span>, <span class="number">129</span>, <span class="number">130</span>, ... <span class="number">250</span>, <span class="number">251</span>, <span class="number">252</span>, ...</span><br><span class="line">branch = <span class="built_in">N</span>  <span class="built_in">N</span>  <span class="built_in">N</span>  <span class="built_in">N</span>  <span class="built_in">N</span>  ...   <span class="built_in">N</span>    <span class="built_in">N</span>    <span class="built_in">T</span>    <span class="built_in">T</span>    <span class="built_in">T</span>  ...   <span class="built_in">T</span>    <span class="built_in">T</span>    <span class="built_in">T</span>  ...</span><br><span class="line"></span><br><span class="line">       = NNNNNNNNNNNN ... NNNNNNNTTTTTTTTT ... TTTTTTTTTT  (easy to predict)</span><br></pre></td></tr></table></figure>
+<p>但是，当数据是完全随机的时，分支预测器将无法发挥作用，因为它无法预测随机数据。因此，可能会有大约50％的预测失误。(比随机乱猜好不到哪而去..)。</p>
+<figure class="highlight excel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data[] = <span class="number">226</span>, <span class="number">185</span>, <span class="number">125</span>, <span class="number">158</span>, <span class="number">198</span>, <span class="number">144</span>, <span class="number">217</span>, <span class="number">79</span>, <span class="number">202</span>, <span class="number">118</span>,  <span class="number">14</span>, <span class="number">150</span>, <span class="number">177</span>, <span class="number">182</span>, <span class="number">133</span>, ...</span><br><span class="line">branch =   <span class="built_in">T</span>,   <span class="built_in">T</span>,   <span class="built_in">N</span>,   <span class="built_in">T</span>,   <span class="built_in">T</span>,   <span class="built_in">T</span>,   <span class="built_in">T</span>,  <span class="built_in">N</span>,   <span class="built_in">T</span>,   <span class="built_in">N</span>,   <span class="built_in">N</span>,   <span class="built_in">T</span>,   <span class="built_in">T</span>,   <span class="built_in">T</span>,   <span class="built_in">N</span>  ...</span><br><span class="line"></span><br><span class="line">       = TTNTTTTNTNNTTTN ...   (completely random - hard to predict)</span><br></pre></td></tr></table></figure>
+<p><strong>那么，我们能做些什么呢？</strong></p>
+<p>如果编译器无法将分支优化为条件转移(conditional move???)，那么如果您愿意为了提高性能而牺牲可读性，则可以尝试一些风骚的操作。<br>👇</p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">data</span>[c] &gt;= <span class="number">128</span>)</span><br><span class="line">    <span class="built_in">sum</span> += <span class="keyword">data</span>[c];</span><br><span class="line">    </span><br><span class="line">// 将上面👆的代码修改为下面👇的，，</span><br><span class="line"></span><br><span class="line"><span class="built_in">int</span> t = (<span class="keyword">data</span>[c] - <span class="number">128</span>) &gt;&gt; <span class="number">31</span>;</span><br><span class="line"><span class="built_in">sum</span> += ~t &amp; <span class="keyword">data</span>[c];</span><br></pre></td></tr></table></figure>
+<p>这样，用一些位操作代替分支(判断)。<br>(PS:需要注意的是，这种风骚的操作并不完全等同于原始的if语句。但在这个例子中，它对数据的所有输入值都有效[])。</p>
+<p><strong>基于: Core i7 920 @ 3.5 GHz</strong></p>
+<p>C++ - Visual Studio 2010 - x64 Release 👇</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  Branch - Random</span></span><br><span class="line">seconds = <span class="number">11.777</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branch - Sorted</span></span><br><span class="line">seconds = <span class="number">2.352</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branchless - Random</span></span><br><span class="line">seconds = <span class="number">2.564</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branchless - Sorted</span></span><br><span class="line">seconds = <span class="number">2.587</span></span><br></pre></td></tr></table></figure>
+<p>Java - Netbeans 7.1.1 JDK 7 - x64</p>
+<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//  Branch - Random</span></span><br><span class="line">seconds = <span class="number">10.93293813</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branch - Sorted</span></span><br><span class="line">seconds = <span class="number">5.643797077</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branchless - Random</span></span><br><span class="line">seconds = <span class="number">3.113581453</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//  Branchless - Sorted</span></span><br><span class="line">seconds = <span class="number">3.186068823</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>分支：排序后的数组与乱序的数组之间(执行速度)有巨大的差异。</li>
+<li>风骚の操作：排序后的数组与乱序的数组之间(执行速度)无明显差异。</li>
+<li>在C++中，排序后的数组用风骚的位操作甚至比分支预测有些慢。。</li>
+</ul>
+<p>一般情况下应该避免 data-dependent branching in critical loops. (such as in this example)</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+      <div>
+        <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+  <div></div>
+  <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+    <span>打赏</span>
+  </button>
+  <div id="QR" style="display: none;">
+
+    
+      <div id="wechat" style="display: inline-block">
+        <img id="wechat_qr" src="/images/wechatpay.jpg" alt="小哪吒 微信支付">
+        <p>微信支付</p>
+      </div>
+    
+
+    
+      <div id="alipay" style="display: inline-block">
+        <img id="alipay_qr" src="/images/alipay.jpg" alt="小哪吒 支付宝">
+        <p>支付宝</p>
+      </div>
+    
+
+    
+
+  </div>
+</div>
+
+      </div>
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/计算机系统/" rel="tag"><i class="fa fa-tag"></i> 计算机系统</a>
+          
+            <a href="/tags/branch-prediction/" rel="tag"><i class="fa fa-tag"></i> branch prediction</a>
+          
+        </div>
+      
+
+      <div>
+        
+          
+
+        
+      </div>
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/06/WeChat-third-party-platform-mina/" rel="next" title="微信第三方平台小程序爬坑">
+                <i class="fa fa-chevron-left"></i> 微信第三方平台小程序爬坑
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/07/08/truly_random/" rel="prev" title="真随机">
+                真随机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+    <div class="comments" id="comments">
+      <div id="disqus_thread">
+        <noscript>
+          Please enable JavaScript to view the
+          <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+        </noscript>
+      </div>
+    </div>
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpeg" alt="小哪吒">
+            
+              <p class="site-author-name" itemprop="name">小哪吒</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="0">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="1">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="t" target="_blank" title="2">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="3">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="4">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href=":" target="_blank" title="5">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="6">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="7">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="8">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="9">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="w" target="_blank" title="10">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="11">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="12">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="13">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="14">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="15">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="u" target="_blank" title="16">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="." target="_blank" title="17">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="c" target="_blank" title="18">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="19">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="m" target="_blank" title="20">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="21">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="22">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="23">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="24">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="p" target="_blank" title="25">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="l" target="_blank" title="26">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="e" target="_blank" title="27">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="/" target="_blank" title="28">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="z" target="_blank" title="29">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="30">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="31">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="o" target="_blank" title="32">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="33">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="s" target="_blank" title="34">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="h" target="_blank" title="35">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="i" target="_blank" title="36">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="-" target="_blank" title="37">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="a" target="_blank" title="38">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="n" target="_blank" title="39">
+                    </a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="g" target="_blank" title="40">
+                    </a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#为什么排序后的数组比乱序的数组执行起来要快？"><span class="nav-number">1.</span> <span class="nav-text">为什么排序后的数组比乱序的数组执行起来要快？</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#高票回答"><span class="nav-number">2.</span> <span class="nav-text">高票回答</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        
+  <div class="footer-custom">备案：<span>冀ICP备18000816号</span></div>
+
+
+<div class="copyright">&copy; <span itemprop="copyrightYear">2021</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">小哪吒</span>
+
+  
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-area-chart"></i>
+    </span>
+    
+      <span class="post-meta-item-text">Site words total count&#58;</span>
+    
+    <span title="Site words total count">107.6k</span>
+  
+</div>
+
+
+
+
+
+
+
+        
+<div class="busuanzi-count">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+    
+      <script id="dsq-count-scr" src="https://someoneiscoding.disqus.com/count.js" async></script>
+    
+
+    
+      <script type="text/javascript">
+        var disqus_config = function () {
+          this.page.url = 'https://www.someoneiscoding.com/2018/06/25/branch_prediction/';
+          this.page.identifier = '2018/06/25/branch_prediction/';
+          this.page.title = '关于局部性原理';
+        };
+        var d = document, s = d.createElement('script');
+        s.src = 'https://someoneiscoding.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', '' + +new Date());
+        (d.head || d.body).appendChild(s);
+      </script>
+    
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+</body>
+</html>
