@@ -98,7 +98,7 @@
 <meta name="description" content="呓语">
 <meta property="og:type" content="website">
 <meta property="og:title" content="程序员的自我修养">
-<meta property="og:url" content="https://www.someoneiscoding.com/tags/Mysql/index.html">
+<meta property="og:url" content="https://www.someoneiscoding.com/tags/MySQL/index.html">
 <meta property="og:site_name" content="程序员的自我修养">
 <meta property="og:description" content="呓语">
 <meta property="og:locale" content="zh-Hans">
@@ -134,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="https://www.someoneiscoding.com/tags/Mysql/">
+  <link rel="canonical" href="https://www.someoneiscoding.com/tags/MySQL/">
 
 
 
 
 
-  <title>标签: Mysql | 程序员的自我修养</title>
+  <title>标签: MySQL | 程序员的自我修养</title>
   
 
 
@@ -321,7 +321,7 @@
 
     <div id="posts" class="posts-collapse">
       <div class="collection-title">
-        <h2>Mysql<small>标签</small>
+        <h2>MySQL<small>标签</small>
         </h2>
       </div>
 
@@ -333,69 +333,17 @@
 
       <h3 class="post-title">
         
-            <a class="post-title-link" href="/2018/01/17/top-n_after_sql_group/" itemprop="url">
+            <a class="post-title-link" href="/2021/06/11/transation-isolated/" itemprop="url">
               
-                <span itemprop="name">SQL分组取前N条记录</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2018-01-17T21:14:44+08:00" content="2018-01-17">
-          01-17
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/19/exists-and-in_in_MySQL/" itemprop="url">
-              
-                <span itemprop="name">浅析MySQL中exists与in的使用</span>
+                <span itemprop="name">事务隔离-高低水位</span>
               
             </a>
         
       </h3>
 
       <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-12-19T23:25:00+08:00" content="2017-12-19">
-          12-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-      
-        
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h3 class="post-title">
-        
-            <a class="post-title-link" href="/2017/12/19/execution_sequence_of_sql/" itemprop="url">
-              
-                <span itemprop="name">SQL逻辑查询语句执行顺序</span>
-              
-            </a>
-        
-      </h3>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2017-12-19T22:35:24+08:00" content="2017-12-19">
-          12-19
+        <time class="post-time" itemprop="dateCreated" datetime="2021-06-11T00:40:00+08:00" content="2021-06-11">
+          06-11
         </time>
       </div>
 
@@ -457,7 +405,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">57</span>
+                  <span class="site-state-item-count">58</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -479,7 +427,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">72</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -743,7 +691,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">107.6k</span>
+    <span title="Site words total count">109.0k</span>
   
 </div>
 
@@ -1195,6 +1143,70 @@
           $('body').css('overflow', '');
 
           proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+
+  
+
+  
+  <script type="text/javascript" src="/js/src/js.cookie.js?v=5.1.3"></script>
+  <script type="text/javascript" src="/js/src/scroll-cookie.js?v=5.1.3"></script>
+
+
+  
+
+</body>
+</html>
+
         }
       });
     }

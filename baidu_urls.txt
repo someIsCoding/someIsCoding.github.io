@@ -1,3 +1,4 @@
+https://www.someoneiscoding.com/2021/06/11/transation-isolated/
 https://www.someoneiscoding.com/2021/01/23/ProustQA_2020/
 https://www.someoneiscoding.com/2020/01/05/knowledge&make-money/
 https://www.someoneiscoding.com/2020/01/01/ProustQA_2019/
@@ -47,4 +48,3 @@ https://www.someoneiscoding.com/2017/12/10/2017_12_week_1st/
 https://www.someoneiscoding.com/2017/12/10/immediately-invoked_function_expression(IIFE)/
 https://www.someoneiscoding.com/2017/12/07/callback_function_in_javascript/
 https://www.someoneiscoding.com/2017/12/07/why_does_the_peacock_spread_its_tail/
-https://www.someoneiscoding.com/2017/12/06/javascript_sync_async_event-loop/
