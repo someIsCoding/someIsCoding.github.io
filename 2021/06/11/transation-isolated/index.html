@@ -104,7 +104,7 @@
 <meta property="og:description" content="事务隔离-高低水位最近在复习丁奇大大MySQL实战45讲 - 08 | 事务到底是隔离的还是不隔离的？中关于 RC 隔离级别的实现时，以前好像读懂的地方又读不懂了。尤其是对下👇图:数据版本可见性规则 中高低水位『当前事务』的理解。 疑问 在可重复读隔离级别下，事务在启动的时候就『拍了个快照』。   按照可重复读的定义，一个事务启动的时候，能够看到所有已经提交的事务结果。但是之后，这个事务执行期间">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://static001.geekbang.org/resource/image/88/5e/882114aaf55861832b4270d44507695e.png">
-<meta property="og:updated_time" content="2021-06-15T16:41:44.448Z">
+<meta property="og:updated_time" content="2021-07-01T18:46:34.182Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="事务隔离-高低水位">
 <meta name="twitter:description" content="事务隔离-高低水位最近在复习丁奇大大MySQL实战45讲 - 08 | 事务到底是隔离的还是不隔离的？中关于 RC 隔离级别的实现时，以前好像读懂的地方又读不懂了。尤其是对下👇图:数据版本可见性规则 中高低水位『当前事务』的理解。 疑问 在可重复读隔离级别下，事务在启动的时候就『拍了个快照』。   按照可重复读的定义，一个事务启动的时候，能够看到所有已经提交的事务结果。但是之后，这个事务执行期间">
@@ -378,8 +378,8 @@
               
                 <span class="post-meta-item-text">更新于&#58;</span>
               
-              <time title="更新于" itemprop="dateModified" datetime="2021-06-16T00:41:44+08:00">
-                2021-06-16
+              <time title="更新于" itemprop="dateModified" datetime="2021-07-02T02:46:34+08:00">
+                2021-07-02
               </time>
             
           </span>
@@ -442,7 +442,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  1,413
+                  1,524
                 </span>
               
 
@@ -458,7 +458,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  5
+                  6
                 </span>
               
             </div>
@@ -534,15 +534,21 @@
 <li>事务不一定会创建 read view，eg. 事务中只有一个 update 语句；</li>
 <li>对于复杂事务，先执行 写操作 语句，则先分配 trx_id ；先执行 Consistent Reads 则先创建 read view。</li>
 </ol>
-<h4 id="解惑"><a href="#解惑" class="headerlink" title="解惑"></a>解惑</h4><p>所以，对于之前提到的两点疑问，这里可以做出解答了：</p>
+<h4 id="解惑"><a href="#解惑" class="headerlink" title="解惑"></a>解惑</h4><p>所以，对于之前提到的『图片中体现的是<em>当前事务</em>右侧还有其他事务？』，这里可以做出解答了：</p>
 <p>↓ 事务 A 启动；</p>
-<p>↓ 事务 B 启动，并执行[写操作 | locking reads ]  ，得到 trx_id:A;</p>
+<p>↓ 事务 B 启动，并执行[写操作 | locking reads ]  ，得到 trx_id:B;</p>
 <p>↓ 事务 A 执行 consistent read 操作，创建 read view;</p>
-<p>↓ 事务 A 执行 执行执行[写操作 | locking reads ] ，得到 trx_id:B;</p>
-<p>trx_id:B &gt; trx_id:A</p>
+<p>↓ 事务 A 执行[写操作 | locking reads ] ，得到 trx_id:A;</p>
+<p>trx_id:B &lt; trx_id:A</p>
 <blockquote>
 <p>InnoDB 里面每个事务有一个唯一的事务 ID，叫作 transaction id。它是在事务开始的时候向 InnoDB 的事务系统申请的，是按申请顺序严格递增的[^3]。</p>
 </blockquote>
+<p>对于第二个疑问，有如下场景：</p>
+<p>↓ 事务 A 启动，并执行[写操作 | locking reads ] ，得到 trx_id:A;</p>
+<p>↓ 事务 B 启动，并执行[写操作 | locking reads ] ，得到 trx_id:B;</p>
+<p>↓ 事务 B 提交;</p>
+<p>↓ 事务 C 启动，创建一致性视图，并执行[写操作 | locking reads ] ，此时事务 A 为活跃事务;</p>
+<p>则 trx_id:B 大于低水位，小于高水位，但不在数组内。</p>
 <hr>
 <p>[^1]: <a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-performance-ro-txn.html" target="_blank" rel="noopener">Optimizing InnoDB Read-Only Transactions</a><br>[^2]: <a href="https://dev.mysql.com/doc/refman/8.0/en/innodb-consistent-read.html" target="_blank" rel="noopener">Consistent Nonlocking Reads</a><br>[^3]: 没摘自课程原文，没有在官方文档中找到原文，知晓的同学还请告知下。</p>
 <p><a href="http://blog.itpub.net/29654823/viewspace-2774598/" target="_blank" rel="noopener">贺子_DBA时代: mysql XID和trx_id小结</a></p>
@@ -1012,7 +1018,7 @@
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">109.0k</span>
+    <span title="Site words total count">109.1k</span>
   
 </div>
 
